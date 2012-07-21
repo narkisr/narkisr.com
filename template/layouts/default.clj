@@ -56,9 +56,7 @@
  [:div {:class "container"}
   contents
 
-  [:footer {:class "footer"} 
-   (license "narkisr.com")
-   #_[:p (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site))) "&nbsp; 2012"]]]
+  [:footer {:class "footer"} (license "narkisr.com") ]]
 
   (js (with-root (site :js) site))]
 
