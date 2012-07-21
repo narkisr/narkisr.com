@@ -1,0 +1,68 @@
+; @layout  post
+; @title   Raspberry foo
+; @tag     raspberry-pi linux wifi
+
+
+[:p "Iv been lucky to get my hands on a raspberry pie, from the get go it was clear that this device isn't ready for the faint hearted, while there is abundant content around for how to start going the pi is a moving target and things change quickly, this post is a quick start for getting pie going." 
+
+ [:h5 "In this post will cover"] 
+ [:ul 
+  [:li "Downloading sdcard image and \"dd'ing\""] 
+  [:li "Enabling SSH and updating Pi's frimware." ]
+  [:li "Enabling wifi with the 8192cu chipset." ]
+  ]]  
+
+
+[:p
+ [:h5 "Downloading and dding"]
+ "The pi site offers both Arch and Debian " (link "images" "http://www.raspberrypi.org/downloads") 
+ ", iv went ahead with Debian mainly since its closer to Ubuntu, note that there are " (link "beta" "http://rpi-developers.com/frs/download.php/file/20") " versions out there but iv found the stock one working best." 
+]
+
+[:div 
+ [:pre {:class "prettyprint"}
+  "$ sudo dd bs=1M if=debian6-19-04-2012.img of=/dev/sdb"
+  ]]
+
+
+[:p "When its done push the sdcard into its slot, make sure to connect the screen before powering up (iv had issue with connecting DVI cable once it was running), " 
+     "as the boot is done connect it to the internet and run all the updates (note sudo password is raspberry by default, change it afterwards):"] 
+[:div 
+ [:pre {:class "prettyprint"}
+"
+$ sudo aptitude update
+$ sudo aptitude upgrade
+"]]
+
+[:p [:h5 "SSHing"]
+ "Its time to get our monitor back, we will enable SSH so we can work remotely:  "
+
+
+#-BASH
+# boot enable
+$ sudo update-rc.d ssh
+
+# ssh won't start without this
+$ ssh-keygem -b 1024 -t rsa -f /etc/ssh/ssh_host_key 
+$ ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh_host_rsa_key 
+$ ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh_host_dsa_key 
+
+# enable firewall
+$ sudo aptitude install ufw
+$ sudo ufw allow 22 
+BASH
+
+[:div] 
+ "Now will update Pi's frimware:"
+ [:pre {:class "prettyprint"}] 
+"
+# updating frimware
+$ sudo wget --no-check-certificate http://goo.gl/1BOfJ -O /usr/bin/rpi-update 
+$ sudo chmod +x /usr/bin/rpi-update
+$ sudo apt-get install git-core
+# avoiding http://tinyurl.com/cbauu4w  
+$ sudo ldconfig
+$ sudo rpi-update 
+"]
+
+[:p ]
