@@ -36,7 +36,7 @@
  [:style "body { padding-top: 80px; }"]
  [:link {:rel   "shortcut icon" :href  "/favicon.ico"}]
  [:link {:href  "/atom.xml" :rel   "alternate" :title (:title site) :type  "application/atom-xml"}]
- (absolute-css ["/css/bootstrap.min.cerulean.css" "/css/bootstrap-responsive.min.css" "/css/docs.css" ]) ]
+ (absolute-css ["../css/bootstrap.min.cerulean.css" "../css/bootstrap-responsive.min.css" "../css/docs.css" ]) ]
 
 [:body 
  (nav-bar)
@@ -45,6 +45,6 @@
  [:footer {:class "footer"} 
   [:p
   (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site))) "&nbsp; 2012"]]]
- (absolute-js ["/js/prettify.js" "/js/jquery-1.7.2.min.js" "/js/bootstrap.min.js"  (:js site ())])]
+ (absolute-js ["../js/prettify.js" "../js/jquery-1.7.2.min.js" "../js/bootstrap.min.js"  (:js site ())])]
 
 
