@@ -2,6 +2,17 @@
 ; @format html5
 
 
+(defn license [site]
+  [:div {:class "span-24 small quite last"}
+    [:span {:xmlns:dc "http://purl.org/dc/elements/1.1/" :href "http://purl.org/dc/dcmitype/Text" :property "dc:title" :rel "dc:type"} " This website content"]
+    " by " [:a {:xmlns:cc "http://creativecommons.org/ns#" :href site :property "cc:attributionName" :rel "cc:attributionURL"} " Ronen Narkis "]
+       " is licensed under a "
+       [:a {:rel "license" :href "http://creativecommons.org/licenses/by/2.5/il/"} "Creative Commons Attribution 2.5 Israel License"] ", based on a work at "
+       [:a {:xmlns:dc "http://purl.org/dc/elements/1.1/" :href site :rel "dc:source"} "narkisr.com"]", "
+       "Permissions beyond the scope of this license may be available at "
+       [:a {:xmlns:cc "http://creativecommons.org/ns#" :href site :rel "cc:morePermissions"} "narkisr.com"] "."
+       ])
+
 (defn with-root [args site] 
  (map #(str (:root site) %) args) ) 
 
@@ -42,11 +53,12 @@
 
 [:body 
  (nav-bar)
- [:div {"class" "container"}
+ [:div {:class "container"}
   contents
-  [:footer {:class "footer"} 
-   [:p
-    (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site))) "&nbsp; 2012"]]]
- (js (with-root (site :js) site))]
 
+  [:footer {:class "footer"} 
+   (license "narkisr.com")
+   #_[:p (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site))) "&nbsp; 2012"]]]
+
+  (js (with-root (site :js) site))]
 
