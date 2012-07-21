@@ -25,6 +25,9 @@
  :site {:charset    "utf-8"
         :site-title "narkisr.com"
         :twitter    "narkisr"
+        :js ["js/prettify.js" "js/jquery-1.7.2.min.js" "js/bootstrap.min.js"]
+        :css  ["css/bootstrap.min.cerulean.css" "css/bootstrap-responsive.min.css" "css/docs.css" ]
+        :root "/"
         }
 
  ;; post file compile hook
