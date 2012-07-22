@@ -27,7 +27,7 @@
       ]
      [:a {:href "/atom.xml"} 
              [:img {:style "border-width:0;margin: 5px 0 0 0;float: right" :src "/img/rss.png"}]]
-     [:a {:class "brand" :href "#"} "Narkisr.com" ]
+     [:a {:class "brand" :href "/"} "Narkisr.com" ]
      [:div {:class "nav-collapse"}
       [:ul {:class "nav"}
        [:li {:class "divider-vertical"}]
@@ -54,6 +54,7 @@
 [:body 
  (nav-bar)
  [:div {:class "container"}
+
   contents
 
   [:footer {:class "footer"} (license "narkisr.com") ]]
