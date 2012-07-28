@@ -41,7 +41,7 @@
   [:p "A " (link "Sayeret Lambda" "http://www.meetup.com/saylambda/events/28807051/") " talk which covers Groovy GDK, Builders, MOP, AST transformation and Gpars, view it " (link "online" "http://narkisr.github.com/lambda-groovy/#1") "." ]]
  [:div {:class "span4"}
   [:h3 "Java on steroids"] 
-  [:p "This talk covers dynamic languages on the JVM, main benefits, fast development cycle, meta object protocol, domain specific languages and interesting projects in Groovy and Ruby " 
+  [:p "This talk covers dynamic languages on the JVM, main benefits, fast development cycle, meta object protocol, domain specific languages and interesting projects in Groovy and Ruby available " 
    (link "here" "http://bit.ly/NBBZFG") "." ]
   [:p "This talk was presented at JavaEdge 2007."]
   ]
