@@ -11,6 +11,5 @@
     [:li "Linux and dev ops"] 
     [:li "Hardware tweaks"] 
    ] 
-   "This blog has been dormant for a while, old content will be restored selectively with time"
   ]  
 

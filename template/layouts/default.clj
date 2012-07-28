@@ -32,7 +32,8 @@
       [:ul {:class "nav"}
        [:li {:class "divider-vertical"}]
        [:li [:a {:href "/posts.html"} "Posts"]]
-       [:li [:a {:href "/projects.html"} "Projects"]]]
+       [:li [:a {:href "/projects.html"} "Projects"]]
+       [:li [:a {:href "/presentations.html"} "Presentations"]]] 
       ]
      ]]]
   )
