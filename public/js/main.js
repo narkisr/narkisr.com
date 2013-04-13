@@ -1,3 +1,4 @@
+var CLOSURE_NO_DEPS = true;
 var COMPILED = false;
 var goog = goog || {};
 goog.global = this;
@@ -114,17 +115,24 @@ goog.global.CLOSURE_NO_DEPS;
 goog.global.CLOSURE_IMPORT_SCRIPT;
 goog.nullFunction = function() {
 };
-goog.identityFunction = function(var_args) {
-  return arguments[0]
+goog.identityFunction = function(opt_returnValue, var_args) {
+  return opt_returnValue
 };
 goog.abstractMethod = function() {
   throw Error("unimplemented abstract method");
 };
 goog.addSingletonGetter = function(ctor) {
   ctor.getInstance = function() {
-    return ctor.instance_ || (ctor.instance_ = new ctor)
+    if(ctor.instance_) {
+      return ctor.instance_
+    }
+    if(goog.DEBUG) {
+      goog.instantiatedSingletons_[goog.instantiatedSingletons_.length] = ctor
+    }
+    return ctor.instance_ = new ctor
   }
 };
+goog.instantiatedSingletons_ = [];
 if(!COMPILED && goog.ENABLE_DEBUG_LOADER) {
   goog.included_ = {};
   goog.dependencies_ = {pathToNames:{}, nameToPath:{}, requires:{}, visited:{}, written:{}};
@@ -256,23 +264,6 @@ goog.typeOf = function(value) {
   }
   return s
 };
-goog.propertyIsEnumerableCustom_ = function(object, propName) {
-  if(propName in object) {
-    for(var key in object) {
-      if(key == propName && Object.prototype.hasOwnProperty.call(object, propName)) {
-        return true
-      }
-    }
-  }
-  return false
-};
-goog.propertyIsEnumerable_ = function(object, propName) {
-  if(object instanceof Object) {
-    return Object.prototype.propertyIsEnumerable.call(object, propName)
-  }else {
-    return goog.propertyIsEnumerableCustom_(object, propName)
-  }
-};
 goog.isDef = function(val) {
   return val !== undefined
 };
@@ -305,8 +296,8 @@ goog.isFunction = function(val) {
   return goog.typeOf(val) == "function"
 };
 goog.isObject = function(val) {
-  var type = goog.typeOf(val);
-  return type == "object" || type == "array" || type == "function"
+  var type = typeof val;
+  return type == "object" && val != null || type == "function"
 };
 goog.getUid = function(obj) {
   return obj[goog.UID_PROPERTY_] || (obj[goog.UID_PROPERTY_] = ++goog.uidCounter_)
@@ -338,7 +329,6 @@ goog.cloneObject = function(obj) {
   }
   return obj
 };
-Object.prototype.clone;
 goog.bindNative_ = function(fn, selfObj, var_args) {
   return fn.call.apply(fn.bind, arguments)
 };
@@ -499,7 +489,11 @@ goog.scope = function(fn) {
 };
 goog.provide("goog.debug.Error");
 goog.debug.Error = function(opt_msg) {
-  this.stack = (new Error).stack || "";
+  if(Error.captureStackTrace) {
+    Error.captureStackTrace(this, goog.debug.Error)
+  }else {
+    this.stack = (new Error).stack || ""
+  }
   if(opt_msg) {
     this.message = String(opt_msg)
   }
@@ -626,13 +620,8 @@ goog.string.numerateCompare = function(str1, str2) {
   }
   return str1 < str2 ? -1 : 1
 };
-goog.string.encodeUriRegExp_ = /^[a-zA-Z0-9\-_.!~*'()]*$/;
 goog.string.urlEncode = function(str) {
-  str = String(str);
-  if(!goog.string.encodeUriRegExp_.test(str)) {
-    return encodeURIComponent(str)
-  }
-  return str
+  return encodeURIComponent(String(str))
 };
 goog.string.urlDecode = function(str) {
   return decodeURIComponent(str.replace(/\+/g, " "))
@@ -770,7 +759,7 @@ goog.string.truncateMiddle = function(str, chars, opt_protectEscapedCharacters, 
   }
   return str
 };
-goog.string.specialEscapeChars_ = {"\x00":"\\0", "\u0008":"\\b", "\u000c":"\\f", "\n":"\\n", "\r":"\\r", "\t":"\\t", "\x0B":"\\x0B", '"':'\\"', "\\":"\\\\"};
+goog.string.specialEscapeChars_ = {"\x00":"\\0", "\b":"\\b", "\f":"\\f", "\n":"\\n", "\r":"\\r", "\t":"\\t", "\x0B":"\\x0B", '"':'\\"', "\\":"\\\\"};
 goog.string.jsEscapeCache_ = {"'":"\\'"};
 goog.string.quote = function(s) {
   s = String(s);
@@ -830,6 +819,9 @@ goog.string.toMap = function(s) {
 };
 goog.string.contains = function(s, ss) {
   return s.indexOf(ss) != -1
+};
+goog.string.countOf = function(s, ss) {
+  return s && ss ? s.split(ss).length - 1 : 0
 };
 goog.string.removeAt = function(s, index, stringLength) {
   var resultStr = s;
@@ -923,15 +915,30 @@ goog.string.toNumber = function(str) {
   }
   return num
 };
-goog.string.toCamelCaseCache_ = {};
 goog.string.toCamelCase = function(str) {
-  return goog.string.toCamelCaseCache_[str] || (goog.string.toCamelCaseCache_[str] = String(str).replace(/\-([a-z])/g, function(all, match) {
+  return String(str).replace(/\-([a-z])/g, function(all, match) {
     return match.toUpperCase()
-  }))
+  })
 };
-goog.string.toSelectorCaseCache_ = {};
 goog.string.toSelectorCase = function(str) {
-  return goog.string.toSelectorCaseCache_[str] || (goog.string.toSelectorCaseCache_[str] = String(str).replace(/([A-Z])/g, "-$1").toLowerCase())
+  return String(str).replace(/([A-Z])/g, "-$1").toLowerCase()
+};
+goog.string.toTitleCase = function(str, opt_delimiters) {
+  var delimiters = goog.isString(opt_delimiters) ? goog.string.regExpEscape(opt_delimiters) : "\\s";
+  delimiters = delimiters ? "|[" + delimiters + "]+" : "";
+  var regexp = new RegExp("(^" + delimiters + ")([a-z])", "g");
+  return str.replace(regexp, function(all, p1, p2) {
+    return p1 + p2.toUpperCase()
+  })
+};
+goog.string.parseInt = function(value) {
+  if(isFinite(value)) {
+    value = String(value)
+  }
+  if(goog.isString(value)) {
+    return/^\s*-?0x/i.test(value) ? parseInt(value, 16) : parseInt(value, 10)
+  }
+  return NaN
 };
 goog.provide("goog.asserts");
 goog.provide("goog.asserts.AssertionError");
@@ -1010,6 +1017,7 @@ goog.asserts.assertInstanceof = function(value, type, opt_message, var_args) {
   if(goog.asserts.ENABLE_ASSERTS && !(value instanceof type)) {
     goog.asserts.doAssertFailure_("instanceof check failed.", null, opt_message, Array.prototype.slice.call(arguments, 3))
   }
+  return value
 };
 goog.provide("goog.array");
 goog.provide("goog.array.ArrayLike");
@@ -1251,23 +1259,18 @@ goog.array.removeIf = function(arr, f, opt_obj) {
 goog.array.concat = function(var_args) {
   return goog.array.ARRAY_PROTOTYPE_.concat.apply(goog.array.ARRAY_PROTOTYPE_, arguments)
 };
-goog.array.clone = function(arr) {
-  if(goog.isArray(arr)) {
-    return goog.array.concat(arr)
-  }else {
-    var rv = [];
-    for(var i = 0, len = arr.length;i < len;i++) {
-      rv[i] = arr[i]
+goog.array.toArray = function(object) {
+  var length = object.length;
+  if(length > 0) {
+    var rv = new Array(length);
+    for(var i = 0;i < length;i++) {
+      rv[i] = object[i]
     }
     return rv
   }
+  return[]
 };
-goog.array.toArray = function(object) {
-  if(goog.isArray(object)) {
-    return goog.array.concat(object)
-  }
-  return goog.array.clone(object)
-};
+goog.array.clone = goog.array.toArray;
 goog.array.extend = function(arr1, var_args) {
   for(var i = 1;i < arguments.length;i++) {
     var arr2 = arguments[i];
@@ -1776,78 +1779,33 @@ goog.string.format.demuxes_["d"] = function(value, flags, width, dotp, precision
 };
 goog.string.format.demuxes_["i"] = goog.string.format.demuxes_["d"];
 goog.string.format.demuxes_["u"] = goog.string.format.demuxes_["d"];
-goog.provide("goog.userAgent.jscript");
-goog.require("goog.string");
-goog.userAgent.jscript.ASSUME_NO_JSCRIPT = false;
-goog.userAgent.jscript.init_ = function() {
-  var hasScriptEngine = "ScriptEngine" in goog.global;
-  goog.userAgent.jscript.DETECTED_HAS_JSCRIPT_ = hasScriptEngine && goog.global["ScriptEngine"]() == "JScript";
-  goog.userAgent.jscript.DETECTED_VERSION_ = goog.userAgent.jscript.DETECTED_HAS_JSCRIPT_ ? goog.global["ScriptEngineMajorVersion"]() + "." + goog.global["ScriptEngineMinorVersion"]() + "." + goog.global["ScriptEngineBuildVersion"]() : "0"
-};
-if(!goog.userAgent.jscript.ASSUME_NO_JSCRIPT) {
-  goog.userAgent.jscript.init_()
-}
-goog.userAgent.jscript.HAS_JSCRIPT = goog.userAgent.jscript.ASSUME_NO_JSCRIPT ? false : goog.userAgent.jscript.DETECTED_HAS_JSCRIPT_;
-goog.userAgent.jscript.VERSION = goog.userAgent.jscript.ASSUME_NO_JSCRIPT ? "0" : goog.userAgent.jscript.DETECTED_VERSION_;
-goog.userAgent.jscript.isVersion = function(version) {
-  return goog.string.compareVersions(goog.userAgent.jscript.VERSION, version) >= 0
-};
 goog.provide("goog.string.StringBuffer");
-goog.require("goog.userAgent.jscript");
 goog.string.StringBuffer = function(opt_a1, var_args) {
-  this.buffer_ = goog.userAgent.jscript.HAS_JSCRIPT ? [] : "";
   if(opt_a1 != null) {
     this.append.apply(this, arguments)
   }
 };
+goog.string.StringBuffer.prototype.buffer_ = "";
 goog.string.StringBuffer.prototype.set = function(s) {
-  this.clear();
-  this.append(s)
+  this.buffer_ = "" + s
 };
-if(goog.userAgent.jscript.HAS_JSCRIPT) {
-  goog.string.StringBuffer.prototype.bufferLength_ = 0;
-  goog.string.StringBuffer.prototype.append = function(a1, opt_a2, var_args) {
-    if(opt_a2 == null) {
-      this.buffer_[this.bufferLength_++] = a1
-    }else {
-      this.buffer_.push.apply(this.buffer_, arguments);
-      this.bufferLength_ = this.buffer_.length
+goog.string.StringBuffer.prototype.append = function(a1, opt_a2, var_args) {
+  this.buffer_ += a1;
+  if(opt_a2 != null) {
+    for(var i = 1;i < arguments.length;i++) {
+      this.buffer_ += arguments[i]
     }
-    return this
   }
-}else {
-  goog.string.StringBuffer.prototype.append = function(a1, opt_a2, var_args) {
-    this.buffer_ += a1;
-    if(opt_a2 != null) {
-      for(var i = 1;i < arguments.length;i++) {
-        this.buffer_ += arguments[i]
-      }
-    }
-    return this
-  }
-}
+  return this
+};
 goog.string.StringBuffer.prototype.clear = function() {
-  if(goog.userAgent.jscript.HAS_JSCRIPT) {
-    this.buffer_.length = 0;
-    this.bufferLength_ = 0
-  }else {
-    this.buffer_ = ""
-  }
+  this.buffer_ = ""
 };
 goog.string.StringBuffer.prototype.getLength = function() {
-  return this.toString().length
+  return this.buffer_.length
 };
 goog.string.StringBuffer.prototype.toString = function() {
-  if(goog.userAgent.jscript.HAS_JSCRIPT) {
-    var str = this.buffer_.join("");
-    this.clear();
-    if(str) {
-      this.append(str)
-    }
-    return str
-  }else {
-    return this.buffer_
-  }
+  return this.buffer_
 };
 goog.provide("cljs.core");
 goog.require("goog.array");
@@ -21011,6 +20969,6 @@ goog.require("cljs.core");
 goog.require("jayq.core");
 goog.require("jayq.core");
 active.activate = function activate(d) {
-  return jayq.core.css.call(null, jayq.core.$.call(null, cljs.core.keyword.call(null, d)), cljs.core.ObjMap.fromObject(["\ufdd0'background"], {"\ufdd0'background":"blue"}))
+  return jayq.core.css.call(null, jayq.core.$.call(null, cljs.core.keyword.call(null, d)), cljs.core.ObjMap.fromObject(["\ufdd0:background"], {"\ufdd0:background":"blue"}))
 };
 goog.exportSymbol("active.activate", active.activate);
