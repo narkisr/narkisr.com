@@ -16,6 +16,7 @@
 (defn with-root [args site] 
  (map #(str (:root site) %) args) ) 
 
+
 (defn nav-bar []
   [:div {:class "navbar navbar-fixed-top"}
    [:div {:class "navbar-inner"}
@@ -23,10 +24,15 @@
      [:a {:class "btn btn-navbar" :data-toggle "collapse" :data-target ".nav-collapse"}
       [:span {:class "icon-bar"}]
       [:span {:class "icon-bar"}]
-      [:span {:class "icon-bar"}]
-      ]
-     [:a {:href "/atom.xml"} 
-             [:img {:style "border-width:0;margin: 5px 0 0 0;float: right" :src "/img/rss.png"}]]
+      [:span {:class "icon-bar"}] ]
+      [:a {:href "/atom.xml" :class "btn" :style "float: right;background: white;"} 
+          [:i {:class "icon-rss" }]]
+      [:a {:href "http://twitter.com/narkisr" :class "btn" :style "float: right;background: white;"} 
+          [:i {:class "icon-twitter" }]]
+     [:a {:href "https://github.com/narkisr" :class "btn" :style "float: right;background: white;"} 
+          [:i {:class "icon-github-alt" }]]
+     [:a {:href "http://il.linkedin.com/in/narkisr/" :class "btn" :style "float: right;background: white;"} 
+          [:i {:class "icon-linkedin" }]]
      [:a {:class "brand" :href "/"} "Narkisr.com" ]
      [:div {:class "nav-collapse"}
       [:ul {:class "nav"}
