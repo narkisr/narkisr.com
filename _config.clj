@@ -25,8 +25,10 @@
  :site {:charset    "utf-8"
         :site-title "narkisr.com"
         :twitter    "narkisr"
-        :js ["js/prettify.js" "js/jquery-1.7.2.min.js" "js/bootstrap.min.js" "js/main.js"]
-        :css  ["css/bootstrap.min.cerulean.css" "css/bootstrap-responsive.min.css" "css/docs.css" ]
+        :js ["js/run_prettify.js" "js/lang-clj.js" "js/jquery-1.7.2.min.js"
+             "js/bootstrap.min.js" "js/main.js" ]
+        :css  ["css/bootstrap.min.cerulean.css" "css/bootstrap-responsive.min.css"
+               "css/docs.css" "css/prettify.css"]
         :root "/"
         }
 
@@ -48,10 +50,12 @@
  ;; clojurescript compile options
  ;; src-dir base is `:template-dir`
  ;; output-dir base is `:public-dir`
-:cljs {:src-dir       "cljs"
+ :cljs {:src-dir       "cljs"
         :output-to     "js/main.js"
         :optimizations :whitespace
         :pretty-print true}
+
+ :compiler  ["default" "cljs"]
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj", :BASH "lang-bsh"}
