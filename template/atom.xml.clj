@@ -3,7 +3,7 @@
 
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 [:feed {:xmlns "http://www.w3.org/2005/Atom"}
- [:title (:title site)]
+ [:title (:site-title site)]
  [:link {:href (str (:base site) "/atom.xml"), :rel "self"}]
  [:link {:href (:base site)}]
  [:updated (date->xml-schema (:date site))]
