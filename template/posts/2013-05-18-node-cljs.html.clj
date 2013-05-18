@@ -78,7 +78,7 @@ BASH
 
 [:h4 "Testing:"]
 
-[:p "Another key aspect is a testing framework, most cljs testing frameworks deal with testing browser code (and require phantom js), the only one that iv found to run well on nodejs and has a cljs DSL is " (link "litmus" "https://github.com/hsalokor/litmus") " which wrapps around " (link "mocha.js" "http://visionmedia.github.io/mocha/") ", currently its not up on Clojars so build is locally using lein install." ]
+[:p "Another key aspect is a testing framework, most cljs testing frameworks deal with testing browser code (and require phantom js), the only one that iv found to run well on nodejs and has a cljs DSL is " (link "litmus" "https://github.com/hsalokor/litmus") " which wrapps around " (link "mocha.js" "http://visionmedia.github.io/mocha/") ", currently its not up on Clojars so build it locally using lein install." ]
 
 [:p "The following show cases how a litmus test looks like:"]
 
