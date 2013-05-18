@@ -39,7 +39,6 @@
  :tag-layout "tag"
 
  ;; post setting
- ;;   default value: #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
  :post-filename-regexp #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
  :post-filename-format "{{year}}-{{month}}/{{filename}}"
 
@@ -58,7 +57,7 @@
  :compiler  ["default" "cljs"]
 
  ;; highlight setting
- :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj", :BASH "lang-bsh"}
+ :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj", :BASH "lang-bsh" :JS "lang-js"}
 
  ;; flag for detailed log
  ;;   default value: false
