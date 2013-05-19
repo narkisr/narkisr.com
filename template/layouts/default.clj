@@ -63,7 +63,6 @@
 [:head
  [:meta {:charset (:charset site)}]
  [:meta {:name "viewport" :content "width=device-width, initial-scale=1.0"}]
- (analytics)
  [:title
   (if (= (:title site) "home")
     (:site-title site)
@@ -82,5 +81,6 @@
 
   [:footer {:class "footer"} (license "narkisr.com") ]]
 
+  (analytics)
   (js (with-root (site :js) site))]
 
