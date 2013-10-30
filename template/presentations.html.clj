@@ -46,5 +46,22 @@
   [:p "This talk was presented at JavaEdge 2007."]
   ]
  ]
+[:div {:class "row"}
+ [:div {:class "span4"}
+  [:h3 "Vagrant sketching board"] 
+  [:p  "This talk introduces Vagrant basic workflow and deep dives into how Vagrant can be used to develop distributed systems locally, " (link "Opskeleton" "https://github.com/narkisr/opskeleton") " is also covered as a solution for bootstrapping Vagrant based projects and distributing them."
+   " the talk was recorded and can be viewed " (link "online" "https://www.youtube.com/watch?v=R8CD97SE6Eg") " the slides are available " (link "here" "http://narkisr.github.io/vagrant-sketching-board/index.html#/") "."] 
+  [:p "It was presented at:"
+   [:ul
+    [:li (link "Devopscon" "http://devopscon.com/wordpress/presentation/vagrant-and-puppet-your-ops-sketching-board/") " 2013 (renamed to devopdays)."]
+    [:li (link "Reversim" "http://summit2013.reversim.com/#/sessions/Vagrant%20and%20Puppet,%20your%20ops%20sketching%20board") " summit 2013"] 
+    ]]] 
 
+ [:div {:class "span4"}
+  [:h3 "Clojure for bigdata processing"] 
+  [:p "This talks covers the use of Clojure in big data processing settings, how it can simplify and enhance Hadoop, its EMR integration, performance the testing libraries and declarative batch processing using " (link "Cascalog" "https://github.com/nathanmarz/cascalog") " the slides are available " (link "here" "http://narkisr.github.io/clojure-bigdata-processing/index.html#/")"."]
+  [:p "This talk was presented at " (link "devcon 2013" "http://devcon-february.events.co.il/presentations/708-clojure-for-big-data-processing")]
+  ]
+
+ ]
 [:p "* The license for all presentations is " (link "Creative Commons Attribution 3.0 Unported License" "http://creativecommons.org/licenses/by/3.0/") " unless stated differently."  ]
