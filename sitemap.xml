@@ -2,7 +2,7 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url>
 <loc>
-http://narkisrblog/pages/projects.html
+http://narkisrpages/projects.html
 </loc>
 <lastmod>
 2014-12-26
@@ -10,7 +10,7 @@ http://narkisrblog/pages/projects.html
 </url>
 <url>
 <loc>
-http://narkisrblog/archives.html
+http://narkisrarchives.html
 </loc>
 <lastmod>
 2014-12-26
@@ -18,7 +18,7 @@ http://narkisrblog/archives.html
 </url>
 <url>
 <loc>
-http://narkisrblog/posts/20-07-2012-raspberri-pi.html
+http://narkisrposts/20-07-2012-raspberri-pi.html
 </loc>
 <lastmod>
 2014-12-26
@@ -26,7 +26,7 @@ http://narkisrblog/posts/20-07-2012-raspberri-pi.html
 </url>
 <url>
 <loc>
-http://narkisrblog/posts/24-07-2012-waiting-for.html
+http://narkisrposts/24-07-2012-waiting-for.html
 </loc>
 <lastmod>
 2014-12-26
@@ -34,7 +34,7 @@ http://narkisrblog/posts/24-07-2012-waiting-for.html
 </url>
 <url>
 <loc>
-http://narkisrblog/posts/13-04-2013-tf101-cyanogenmod.html
+http://narkisrposts/13-04-2013-tf101-cyanogenmod.html
 </loc>
 <lastmod>
 2014-12-26
@@ -42,7 +42,7 @@ http://narkisrblog/posts/13-04-2013-tf101-cyanogenmod.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/cyanogenmod.html
+http://narkisrtags/cyanogenmod.html
 </loc>
 <lastmod>
 2014-12-26
@@ -50,7 +50,7 @@ http://narkisrblog/tags/cyanogenmod.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/raspberry-pi.html
+http://narkisrtags/raspberry-pi.html
 </loc>
 <lastmod>
 2014-12-26
@@ -58,7 +58,7 @@ http://narkisrblog/tags/raspberry-pi.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/Clojure.html
+http://narkisrtags/Clojure.html
 </loc>
 <lastmod>
 2014-12-26
@@ -66,7 +66,7 @@ http://narkisrblog/tags/Clojure.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/wifi.html
+http://narkisrtags/wifi.html
 </loc>
 <lastmod>
 2014-12-26
@@ -74,7 +74,7 @@ http://narkisrblog/tags/wifi.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/concurrency.html
+http://narkisrtags/concurrency.html
 </loc>
 <lastmod>
 2014-12-26
@@ -82,7 +82,7 @@ http://narkisrblog/tags/concurrency.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/tf101.html
+http://narkisrtags/tf101.html
 </loc>
 <lastmod>
 2014-12-26
@@ -90,7 +90,7 @@ http://narkisrblog/tags/tf101.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/linux.html
+http://narkisrtags/linux.html
 </loc>
 <lastmod>
 2014-12-26
@@ -98,7 +98,7 @@ http://narkisrblog/tags/linux.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/android.html
+http://narkisrtags/android.html
 </loc>
 <lastmod>
 2014-12-26
@@ -106,7 +106,7 @@ http://narkisrblog/tags/android.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/future.html
+http://narkisrtags/future.html
 </loc>
 <lastmod>
 2014-12-26
@@ -114,7 +114,7 @@ http://narkisrblog/tags/future.html
 </url>
 <url>
 <loc>
-http://narkisrblog/tags/asus.html
+http://narkisrtags/asus.html
 </loc>
 <lastmod>
 2014-12-26
@@ -122,7 +122,7 @@ http://narkisrblog/tags/asus.html
 </url>
 <url>
 <loc>
-http://narkisrblog/404.html
+http://narkisr404.html
 </loc>
 <lastmod>
 2014-12-26
@@ -130,7 +130,7 @@ http://narkisrblog/404.html
 </url>
 <url>
 <loc>
-http://narkisrblog/index.html
+http://narkisrindex.html
 </loc>
 <lastmod>
 2014-12-26
