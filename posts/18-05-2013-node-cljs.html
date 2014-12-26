@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Narkisr.com: Nodifying Clojure</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" >
+    <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"> -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+        <link href="../css/screen.css" rel="stylesheet" type="text/css" />
+	  <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	  <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			</button>
+			<h1><a class="navbar-brand" href="/index.html">Narkisr.com</a></h1>
+		    </div>
+		    <ul class="nav navbar-nav navbar-right">
+			<li><a class="btn" href=/feed.xml ><i class="fa fa-rss"></i></a></li>
+			<li><a class="btn" href="http://twitter.com/narkisr" ><i class="fa fa-twitter"></i></a></li>
+			<li><a class="btn" href="https://github.com/narkisr" ><i class="fa fa-github-alt"></i></a></li>
+			<li><a class="btn" href="http://il.linkedin.com/in/narkisr/" ><i class="fa fa-linkedin"></i></a></li>
+		    </ul>
+		    <!-- nav links -->
+		    <div id="navbar" class="navbar-collapse collapse">            
+			<ul class="nav navbar-nav">
+			  <li ><a href="/index.html">Home</a></li>
+			  <li ><a href="/archives.html">Archives</a></li>
+			  
+			  <li >
+			  <a href="/pages/projects.html">Projects</a>
+			  </li>
+			  
+			</ul>
+		    </div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+
+		<div id="wrapper" class="container">
+		  <div class="row">
+		    <div class="col-md-8">
+			<div id="content">
+			  
+<div id="post">
+    <div id="post-header">
+    <h2>Nodifying Clojure</h2>
+    <div id="post-meta">
+        
+        <div class="date">May 18, 2013</div>
+    </div>
+</div>
+<div>
+    
+    <h2><a name="intro"></a>Intro</h2>In this post ill cover how to integrate ClojureScript (cljs in short) with nodejs, the use case I was trying to solve was to write  <a href='http://hubot.github.com/'>hubot</a>  integration script with a product Im working on.<p>Hubot scripts are written using Coffeescript but iv really missed the power of Clojure under my finger tips so iv decided to write a nodejs library with all the main logic in cljs. I wanted to have a full development stack with build, dependency management and testing support.</p><p>A key point to understand is that a cljs/node project is living on dual platforms at once, it has dependencies rooted in its nodejs package.json file and some in its cljs project.clj not to mention two build procedures.</p><h4><a name="setting&#95;up:"></a>Setting up:</h4><p>The tool chain required in setting up a project include: <ul><li><a href='https://github.com/technomancy/leiningen'>lein</a>  the Clojure build tool we will be using <a href='https://github.com/emezeske/lein-cljsbuild'>lein-cljsbuild</a>  plugin in order to compile our cljs code.</li><li><a href='https://npmjs.org/'>npm</a>  which is the nodejs package management tool, I highly recommend using  <a href='https://github.com/creationix/nvm'>nvm</a>  for setting it up. </li></ul>The project structure includes:</p><pre><code class="bash">├── lib # our compiled cljs js file
+├── Makefile # nodejs build tasks
+├── node&#95;modules # npm local libraries
+├── package.json # npm dependencies
+├── project.clj # lein cljs build and dependencies
+├── src # cljs source
+├── test # compiled test js file
+└── test-cljs # cljs test code
+</code></pre><p>The project.clj contains our cljs build settings and dependencies:</p><pre><code class="clojure">&#40;defproject celestial-node &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;Celestial nodejs integration&quot;
+  :url &quot;https://github.com/narkisr/celestial-node&quot;
+  :license {:name &quot;Apache V2&quot; :url &quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;}
+  :dependencies &#91;&#91;org.clojure/core.incubator &quot;0.1.2&quot;&#93;
+                 &#91;org.bodil/redlobster &quot;0.2.1&quot;&#93;
+                 &#91;litmus &quot;0.2.0-SNAPSHOT&quot;&#93;&#93;
+  
+  :plugins  &#91;&#91;lein-cljsbuild &quot;0.3.0&quot;&#93;&#93;
+  
+  :cljsbuild {
+              :builds
+              {:prod 
+               {:source-paths &#91;&quot;src&quot;&#93;
+                :compiler {
+                           :target :nodejs
+                           :output-to &quot;lib/celestial.js&quot;
+                           :optimizations :simple
+                           :pretty-print true}}
+               :test
+               {:source-paths &#91;&quot;test-cljs&quot;&#93;
+                :compiler {
+                           :target :nodejs
+                           :output-to &quot;test/celestial.js&quot;
+                           :optimizations :simple
+                           :pretty-print true}}}}
+  &#41;
+</code></pre><p>Notice that there are two builds with two different outputs, one for production use (lib/celestial.js) and one for testing (test/celestial.js), this enable us to keep test logic out of our production code (in fact the test run executes as a part of the main) , in order to build the cljs output we could run:</p><pre><code class="bash"> # one time compilation
+ $ lein cljsbuild once 
+ # auto compilation on save
+ $ lein cljsbuild auto
+</code></pre><h4><a name="testing:"></a>Testing:</h4><p>Another key aspect is a testing framework, most cljs testing frameworks deal with testing browser code (and require phantom js), the only one that iv found to run well on nodejs and has a cljs DSL is  <a href='https://github.com/hsalokor/litmus'>litmus</a>  which wrapps around  <a href='http://visionmedia.github.io/mocha/'>mocha.js</a> , currently its not up on Clojars so build it locally using lein install.</p><p>The following show cases how a litmus test looks like:</p><pre><code class="clojure"> &#40;describe &quot;system manipulations&quot;
+   &#40;given &quot;we store a new system&quot;  
+      &#40;it-async &quot;creates a new id&quot;    
+        &#40;create-system &#40;slurp-edn &quot;fixtures/redis-system.edn&quot;&#41; 
+            &#40;fn &#91;body&#93; &#40;reset! sys-id &#40;aget body &quot;id&quot;&#41;&#41; &#40;done&#41;&#41;
+            &#40;fn &#91;error&#93; &#40;println &quot;failed&quot; error&#41; &#40;done&#41;&#41;&#41;&#41;
+      &#40;it-async &quot;we can fetch it back&quot;
+        &#40;get-system @sys-id 
+            &#40;fn &#91;body&#93; &#40;equals? &#40;aget body &quot;type&quot;&#41; =&gt; &quot;redis&quot;&#41; &#40;done&#41;&#41;
+            &#40;fn &#91;error&#93; &#40;println error&#41;&#41;&#41;&#41;    
+          &#41;&#41;
+</code></pre><p>Due to the async nature of nodejs we use done fn to mark when a test is indeed done, the DSL is BDD oriented, in order to run the tests we run the 'make test' defined in our Makefile (which is a part of the nodejs build system), the Makefile consists of: </p><pre><code class="bash">REPORTER = dot
+  
+test:
+        @NODE&#95;ENV=test ./node&#95;modules/.bin/mocha \
+        --reporter $&#40;REPORTER&#41; \
+        --ui tdd -t 3000
+    
+test-w:
+        @NODE&#95;ENV=test ./node&#95;modules/.bin/mocha \
+        --reporter $&#40;REPORTER&#41; \
+        --growl \
+        --ui tdd \
+        --watch
+
+package: clean
+        lein cljsbuild once
+        mkdir pkg
+        cp lib/celestial.js pkg
+        cp -r fixtures pkg
+        
+clean:  
+      rm -rf pkg
+
+.PHONY: test test-w
+</code></pre><p>As you can see the test target invokes the mocha binary located under npm's node_modules library which is defined in the package.json file: </p><pre><code class="javascipt">{
+  &quot;name&quot;: &quot;celestial-node&quot;,
+  &quot;preferGlobal&quot;: false,
+  &quot;version&quot;: &quot;0.1.0&quot;,
+  &quot;author&quot;: &quot;Ronen Narkis &lt;narkisr@gmail.com&gt; &#40;http://narkisr.com&#41;&quot;,
+  &quot;description&quot;: &quot;Celestial API for nodejs&quot;,
+  &quot;repository&quot;: {
+    &quot;type&quot;: &quot;git&quot;,
+    &quot;url&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;Apache-V2&quot;,
+  &quot;dependencies&quot;: {
+    &quot;npm&quot;: &quot;&gt;= 1.1.2&quot;,
+    &quot;request&quot;: &quot;=2.21.0&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;make test&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;chai&quot;: &quot;&#42;&quot;,
+    &quot;mocha&quot;: &quot;&#42;&quot;
+   },
+  &quot;optionalDependencies&quot;: {},
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;0.6 || 0.7 || 0.8&quot;
+  },
+  &quot;homepage&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;lib/celestial.js&quot;
+}
+</code></pre><p>Nodejs integration:</p><p>The package.json includes all our nodejs dependencies (remeber the duality part?), we can add and use any nodejs module from our cljs code, in order to use a nodejs module:</p><pre><code class="clojure">; nodejs require
+&#40;def request &#40;js/require &quot;request&quot;&#41;&#41; 
+
+; js interop usage
+&#40;defn GET &#91;url s f&#93;
+  &#40;.get request &#40;&lt;&lt; &quot;&#126;&#40;@conf :url&#41;&#126;{url}&quot;&#41; &#40;clj-&gt;js &#40;opts&#41;&#41; &#40;response- s f&#41;&#41;&#41;
+</code></pre><p>In order to expose cljs api to nodejs consumers we need to export a ns:</p><pre><code class="clojure">&#40;ns celestial.core ...&#41;
+ 
+&#40;defn main &#91;&#93;&#41;
+
+; required even if we don't use a main
+&#40;set! &#42;main-cli-fn&#42; main&#41;
+
+; export this ns as a part of nodejs module
+&#40;aset js/exports &quot;core&quot; celestial.core&#41;
+</code></pre><p>With that all in place we can require our cljs module from any other npm enabled project:</p><pre><code class="javascipt">{
+  &quot;name&quot;: &quot;hubot-celestial&quot;,
+  &quot;version&quot;: &quot;0.0.1&quot;,
+  &quot;description&quot;: &quot;Hubot script for interacting with Celestial&quot;,
+  &quot;main&quot;: &quot;main.js&quot;,
+  &quot;scripts&quot;: {
+  },
+  &quot;repository&quot;: &quot;git://github.com/narkisr/hubot-celestial.git&quot;,
+  &quot;author&quot;: &quot;narkisr.com&quot;,
+  &quot;license&quot;: &quot;Apache-V2&quot;,
+  &quot;dependencies&quot;: {
+    &quot;coffee-script&quot;: &quot;&#126;1.4.0&quot;,
+    &quot;hubot&quot;: &quot;&#126;2.4.8&quot;,
+    &quot;hubocator&quot;: &quot;0.1.2&quot;,
+    &quot;cli-table&quot; : &quot;0.2.0&quot;,
+    &quot;underscore&quot; :&quot;1.4.4&quot;,
+    &quot;celestial-node&quot;:&quot;git://github.com/narkisr/celestial-node.git&quot;
+  }
+}
+</code></pre><p>Requiring the api:</p><pre><code class="javascipt">celestial = require &#40;'celestial-node'&#41;
+celestial.core.get&#95;system&#40;id,&#40;&#40;b&#41;-&gt; msg.send systemTable&#40;b&#41;&#41;, &#40;&#40;e&#41;-&gt; msg.send e&#41;&#41;
+</code></pre><h2><a name="summary"></a>Summary</h2>Iv found cljs and nodejs to be a very powerfull (yet a bit young) combo to work with, it offers yet another very rich platform to run Clojure code on top of. I hope you will find it useful too.<h4><a name="footnotes:"></a>Footnotes:</h4><ul><li><a href='https://github.com/narkisr/celestial-node'>celestial-node</a> (most of the code preseted)</li><li><a href='https://github.com/narkisr/hubot-celestial'>hubot-celestial</a></li></ul>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags/js.html">js</a>
+    
+    <a href="/tags/Clojure.html">Clojure</a>
+    
+    <a href="/tags/nodejs.html">nodejs</a>
+    
+</div>
+
+    <div id="prev-next">
+        
+        <a href="/posts/27-12-2014-security-onion-vagrant.html">&laquo; Security onion vagrant</a>
+        
+        
+        ||
+        
+        
+        <a href="/posts/13-04-2013-tf101-cyanogenmod.html">Asus TF101 Cyanogenmod &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//narkisr.com.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+			</div>
+		    </div>
+
+		    <div class="col-md-3">
+			<div id="sidebar">
+			  <ul id="links">
+
+			    
+			  </ul>
+			  <div id="recent">
+			    <h3>Recent Posts</h3>
+			    <ul>
+				
+				<li><a href="/posts/27-12-2014-security-onion-vagrant.html">Security onion vagrant</a></li>
+				
+				<li><a href="/posts/18-05-2013-node-cljs.html">Nodifying Clojure</a></li>
+				
+				<li><a href="/posts/13-04-2013-tf101-cyanogenmod.html">Asus TF101 Cyanogenmod</a></li>
+				
+			    </ul>
+			  </div>
+			  <div id="tags">
+			    <h3>Tags</h3>
+			    <ul>
+				
+				<li><a href="/tags/js.html">js</a></li>
+				
+				<li><a href="/tags/security.html">security</a></li>
+				
+				<li><a href="/tags/cyanogenmod.html">cyanogenmod</a></li>
+				
+				<li><a href="/tags/wifi.html">wifi</a></li>
+				
+				<li><a href="/tags/asus.html">asus</a></li>
+				
+				<li><a href="/tags/opskeleton.html">opskeleton</a></li>
+				
+				<li><a href="/tags/tf101.html">tf101</a></li>
+				
+				<li><a href="/tags/linux.html">linux</a></li>
+				
+				<li><a href="/tags/Clojure.html">Clojure</a></li>
+				
+				<li><a href="/tags/vagrant.html">vagrant</a></li>
+				
+				<li><a href="/tags/concurrency.html">concurrency</a></li>
+				
+				<li><a href="/tags/future.html">future</a></li>
+				
+				<li><a href="/tags/android.html">android</a></li>
+				
+				<li><a href="/tags/raspberry-pi.html">raspberry-pi</a></li>
+				
+				<li><a href="/tags/nodejs.html">nodejs</a></li>
+				
+			    </ul>
+			  </div>
+			</div>
+		    </div>
+		  </div>
+		  <footer class="footer"><div class="span-24 small quite last">
+			<span href="http://purl.org/dc/dcmitype/Text" property="dc:title" rel="dc:type" xmlns:dc="http://purl.org/dc/elements/1.1/"> This website content</span> by <a href="narkisr.com" property="cc:attributionName" rel="cc:attributionURL" xmlns:cc="http://creativecommons.org/ns#"> Ronen Narkis </a> is licensed under a <a href="http://creativecommons.org/licenses/by/2.5/il/" rel="license">Creative Commons Attribution 2.5 Israel License</a>, based on a work at <a href="narkisr.com" rel="dc:source" xmlns:dc="http://purl.org/dc/elements/1.1/">narkisr.com</a>, Permissions beyond the scope of this license may be available at <a href="narkisr.com" rel="cc:morePermissions" xmlns:cc="http://creativecommons.org/ns#">narkisr.com</a>.</div>
+		  </footer>
+		</div>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+		<script src="../js/highlight.pack.js" type="text/javascript"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+	    </body>
+	  </html>
+

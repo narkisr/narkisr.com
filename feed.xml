@@ -15,11 +15,203 @@ http://narkisr
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Fri, 26 Dec 2014 23:41:24 +0200
+Sat, 27 Dec 2014 01:18:49 +0200
 </lastBuildDate>
 <author>
 Ronen Narkis
 </author>
+<item>
+<guid>
+http://narkisr/posts/27-12-2014-security-onion-vagrant.html
+</guid>
+<link>
+http://narkisr/posts/27-12-2014-security-onion-vagrant.html
+</link>
+<title>
+Security onion vagrant
+</title>
+<description>
+&lt;h3&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h3&gt;Setting up &lt;a href='http://en.wikipedia.org/wiki/Intrusion&amp;#95;detection&amp;#95;system'&gt;IDS&lt;/a&gt; systems such as &lt;a href='https://www.snort.org/'&gt;snort&lt;/a&gt; has always been a tedious task, &lt;a href='http://blog.securityonion.net/p/securityonion.html'&gt;Security onion&lt;/a&gt; (or SO for short) is a solution that aims to change that.&lt;p&gt;SO publishes a &lt;a href='https://launchpad.net/&amp;#126;securityonion/+archive/ubuntu/stable'&gt;PPA&lt;/a&gt; which is Ubuntu 12.04 compatible and distributes a livecd &lt;a href='http://sourceforge.net/projects/security-onion/'&gt;ISO&lt;/a&gt; for setting it up on physical machines.&lt;/p&gt;&lt;p&gt;In this post ill go through on how to setup SO vagrant box, enabling us to do fast iterations and provisioning development.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;box&amp;#95;setup&quot;&gt;&lt;/a&gt;BOX setup&lt;/h4&gt;&lt;p&gt;The first step is creating the SO box itself using &lt;a href='https://www.packer.io/'&gt;packer&lt;/a&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ git clone git://github.com/narkisr/packer-security-onion.git 
+# won't work on a headless machine
+$ make virtualbox/security-onion-12.04.4  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The box itself is quite heavily customized due to the requirements of SO, once the box was created we import it like any other:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ vagrant box add security-onion-12.04.4&amp;#95;puppet-3.7.3 box/virtualbox/security-onion-12.04.4&amp;#95;puppet&amp;#95;3.7.3.box
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we are ready to start rolling vagrant.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;vagrant&quot;&gt;&lt;/a&gt;Vagrant&lt;/h4&gt;&lt;p&gt;Perquisites:&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/opskeleton/opskeleton'&gt;Opskeleton&lt;/a&gt; defines the project layout of the following Vagrant/Puppet code base so make sure to &lt;a href='https://github.com/opskeleton/opskeleton#installation'&gt;have&lt;/a&gt;.&lt;/li&gt;&lt;li&gt;SO itself requires a running GUI (so no headless servers).&lt;/li&gt;&lt;li&gt;Have a mirror port ready on your switch connected to a physical interface (if you want to capture meaningful traffic), note that you can customize the mirror port vagrant uses (using VAGRANT_MIRROR).&lt;/li&gt;&lt;/ul&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ git clone git://github.com/opskeleton/security-onion-sandbox.git
+# Wont work on a headless machine
+$ gem install bundle
+$ bundle install
+$ librarian-puppet install
+# in order to customize mirror port use VAGRANT&amp;#95;MIRROR=ifc
+$ vagrant up
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Once the VM UI is running enter a terminal and start sosetup:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sosetup
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On its first invocation the wizard will guide you through the network setup, choose eth0 as the management interface and eth1 as the monitor interface, reboot once done.&lt;/p&gt;&lt;p&gt;Once the machine is up run sosetup again to setup Sguil and Snorby u/p&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sosetup
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once done you can either head on to &lt;a href='https://localhost'&gt;localhost&lt;/a&gt; (from within the VM) or from the host use the forwarded ports &lt;a href='https://localhost:8444'&gt;snorby&lt;/a&gt;.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;footnotes:&quot;&gt;&lt;/a&gt;Footnotes:&lt;/h4&gt;&lt;p&gt;&lt;small&gt; Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. &lt;/small&gt; &lt;small&gt; ssh didn't work well &lt;/p&gt;
+</description>
+<pubDate>
+Sat, 27 Dec 2014 00:00:00 +0200
+</pubDate>
+<author>
+Ronen Narkis
+</author>
+</item>
+<item>
+<guid>
+http://narkisr/posts/18-05-2013-node-cljs.html
+</guid>
+<link>
+http://narkisr/posts/18-05-2013-node-cljs.html
+</link>
+<title>
+Nodifying Clojure
+</title>
+<description>
+&lt;h2&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h2&gt;In this post ill cover how to integrate ClojureScript (cljs in short) with nodejs, the use case I was trying to solve was to write  &lt;a href='http://hubot.github.com/'&gt;hubot&lt;/a&gt;  integration script with a product Im working on.&lt;p&gt;Hubot scripts are written using Coffeescript but iv really missed the power of Clojure under my finger tips so iv decided to write a nodejs library with all the main logic in cljs. I wanted to have a full development stack with build, dependency management and testing support.&lt;/p&gt;&lt;p&gt;A key point to understand is that a cljs/node project is living on dual platforms at once, it has dependencies rooted in its nodejs package.json file and some in its cljs project.clj not to mention two build procedures.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;setting&amp;#95;up:&quot;&gt;&lt;/a&gt;Setting up:&lt;/h4&gt;&lt;p&gt;The tool chain required in setting up a project include: &lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/technomancy/leiningen'&gt;lein&lt;/a&gt;  the Clojure build tool we will be using &lt;a href='https://github.com/emezeske/lein-cljsbuild'&gt;lein-cljsbuild&lt;/a&gt;  plugin in order to compile our cljs code.&lt;/li&gt;&lt;li&gt;&lt;a href='https://npmjs.org/'&gt;npm&lt;/a&gt;  which is the nodejs package management tool, I highly recommend using  &lt;a href='https://github.com/creationix/nvm'&gt;nvm&lt;/a&gt;  for setting it up. &lt;/li&gt;&lt;/ul&gt;The project structure includes:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;├── lib # our compiled cljs js file
+├── Makefile # nodejs build tasks
+├── node&amp;#95;modules # npm local libraries
+├── package.json # npm dependencies
+├── project.clj # lein cljs build and dependencies
+├── src # cljs source
+├── test # compiled test js file
+└── test-cljs # cljs test code
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The project.clj contains our cljs build settings and dependencies:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defproject celestial-node &amp;quot;0.1.0-SNAPSHOT&amp;quot;
+  :description &amp;quot;Celestial nodejs integration&amp;quot;
+  :url &amp;quot;https://github.com/narkisr/celestial-node&amp;quot;
+  :license {:name &amp;quot;Apache V2&amp;quot; :url &amp;quot;https://www.apache.org/licenses/LICENSE-2.0.html&amp;quot;}
+  :dependencies &amp;#91;&amp;#91;org.clojure/core.incubator &amp;quot;0.1.2&amp;quot;&amp;#93;
+                 &amp;#91;org.bodil/redlobster &amp;quot;0.2.1&amp;quot;&amp;#93;
+                 &amp;#91;litmus &amp;quot;0.2.0-SNAPSHOT&amp;quot;&amp;#93;&amp;#93;
+  
+  :plugins  &amp;#91;&amp;#91;lein-cljsbuild &amp;quot;0.3.0&amp;quot;&amp;#93;&amp;#93;
+  
+  :cljsbuild {
+              :builds
+              {:prod 
+               {:source-paths &amp;#91;&amp;quot;src&amp;quot;&amp;#93;
+                :compiler {
+                           :target :nodejs
+                           :output-to &amp;quot;lib/celestial.js&amp;quot;
+                           :optimizations :simple
+                           :pretty-print true}}
+               :test
+               {:source-paths &amp;#91;&amp;quot;test-cljs&amp;quot;&amp;#93;
+                :compiler {
+                           :target :nodejs
+                           :output-to &amp;quot;test/celestial.js&amp;quot;
+                           :optimizations :simple
+                           :pretty-print true}}}}
+  &amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice that there are two builds with two different outputs, one for production use (lib/celestial.js) and one for testing (test/celestial.js), this enable us to keep test logic out of our production code (in fact the test run executes as a part of the main) , in order to build the cljs output we could run:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt; # one time compilation
+ $ lein cljsbuild once 
+ # auto compilation on save
+ $ lein cljsbuild auto
+&lt;/code&gt;&lt;/pre&gt;&lt;h4&gt;&lt;a name=&quot;testing:&quot;&gt;&lt;/a&gt;Testing:&lt;/h4&gt;&lt;p&gt;Another key aspect is a testing framework, most cljs testing frameworks deal with testing browser code (and require phantom js), the only one that iv found to run well on nodejs and has a cljs DSL is  &lt;a href='https://github.com/hsalokor/litmus'&gt;litmus&lt;/a&gt;  which wrapps around  &lt;a href='http://visionmedia.github.io/mocha/'&gt;mocha.js&lt;/a&gt; , currently its not up on Clojars so build it locally using lein install.&lt;/p&gt;&lt;p&gt;The following show cases how a litmus test looks like:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt; &amp;#40;describe &amp;quot;system manipulations&amp;quot;
+   &amp;#40;given &amp;quot;we store a new system&amp;quot;  
+      &amp;#40;it-async &amp;quot;creates a new id&amp;quot;    
+        &amp;#40;create-system &amp;#40;slurp-edn &amp;quot;fixtures/redis-system.edn&amp;quot;&amp;#41; 
+            &amp;#40;fn &amp;#91;body&amp;#93; &amp;#40;reset! sys-id &amp;#40;aget body &amp;quot;id&amp;quot;&amp;#41;&amp;#41; &amp;#40;done&amp;#41;&amp;#41;
+            &amp;#40;fn &amp;#91;error&amp;#93; &amp;#40;println &amp;quot;failed&amp;quot; error&amp;#41; &amp;#40;done&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+      &amp;#40;it-async &amp;quot;we can fetch it back&amp;quot;
+        &amp;#40;get-system @sys-id 
+            &amp;#40;fn &amp;#91;body&amp;#93; &amp;#40;equals? &amp;#40;aget body &amp;quot;type&amp;quot;&amp;#41; =&amp;gt; &amp;quot;redis&amp;quot;&amp;#41; &amp;#40;done&amp;#41;&amp;#41;
+            &amp;#40;fn &amp;#91;error&amp;#93; &amp;#40;println error&amp;#41;&amp;#41;&amp;#41;&amp;#41;    
+          &amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Due to the async nature of nodejs we use done fn to mark when a test is indeed done, the DSL is BDD oriented, in order to run the tests we run the 'make test' defined in our Makefile (which is a part of the nodejs build system), the Makefile consists of: &lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;REPORTER = dot
+  
+test:
+        @NODE&amp;#95;ENV=test ./node&amp;#95;modules/.bin/mocha \
+        --reporter $&amp;#40;REPORTER&amp;#41; \
+        --ui tdd -t 3000
+    
+test-w:
+        @NODE&amp;#95;ENV=test ./node&amp;#95;modules/.bin/mocha \
+        --reporter $&amp;#40;REPORTER&amp;#41; \
+        --growl \
+        --ui tdd \
+        --watch
+
+package: clean
+        lein cljsbuild once
+        mkdir pkg
+        cp lib/celestial.js pkg
+        cp -r fixtures pkg
+        
+clean:  
+      rm -rf pkg
+
+.PHONY: test test-w
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As you can see the test target invokes the mocha binary located under npm's node_modules library which is defined in the package.json file: &lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascipt&quot;&gt;{
+  &amp;quot;name&amp;quot;: &amp;quot;celestial-node&amp;quot;,
+  &amp;quot;preferGlobal&amp;quot;: false,
+  &amp;quot;version&amp;quot;: &amp;quot;0.1.0&amp;quot;,
+  &amp;quot;author&amp;quot;: &amp;quot;Ronen Narkis &amp;lt;narkisr@gmail.com&amp;gt; &amp;#40;http://narkisr.com&amp;#41;&amp;quot;,
+  &amp;quot;description&amp;quot;: &amp;quot;Celestial API for nodejs&amp;quot;,
+  &amp;quot;repository&amp;quot;: {
+    &amp;quot;type&amp;quot;: &amp;quot;git&amp;quot;,
+    &amp;quot;url&amp;quot;: &amp;quot;&amp;quot;
+  },
+  &amp;quot;license&amp;quot;: &amp;quot;Apache-V2&amp;quot;,
+  &amp;quot;dependencies&amp;quot;: {
+    &amp;quot;npm&amp;quot;: &amp;quot;&amp;gt;= 1.1.2&amp;quot;,
+    &amp;quot;request&amp;quot;: &amp;quot;=2.21.0&amp;quot;
+  },
+  &amp;quot;scripts&amp;quot;: {
+    &amp;quot;test&amp;quot;: &amp;quot;make test&amp;quot;
+  },
+  &amp;quot;devDependencies&amp;quot;: {
+    &amp;quot;chai&amp;quot;: &amp;quot;&amp;#42;&amp;quot;,
+    &amp;quot;mocha&amp;quot;: &amp;quot;&amp;#42;&amp;quot;
+   },
+  &amp;quot;optionalDependencies&amp;quot;: {},
+  &amp;quot;engines&amp;quot;: {
+    &amp;quot;node&amp;quot;: &amp;quot;0.6 || 0.7 || 0.8&amp;quot;
+  },
+  &amp;quot;homepage&amp;quot;: &amp;quot;&amp;quot;,
+  &amp;quot;main&amp;quot;: &amp;quot;lib/celestial.js&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Nodejs integration:&lt;/p&gt;&lt;p&gt;The package.json includes all our nodejs dependencies (remeber the duality part?), we can add and use any nodejs module from our cljs code, in order to use a nodejs module:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;; nodejs require
+&amp;#40;def request &amp;#40;js/require &amp;quot;request&amp;quot;&amp;#41;&amp;#41; 
+
+; js interop usage
+&amp;#40;defn GET &amp;#91;url s f&amp;#93;
+  &amp;#40;.get request &amp;#40;&amp;lt;&amp;lt; &amp;quot;&amp;#126;&amp;#40;@conf :url&amp;#41;&amp;#126;{url}&amp;quot;&amp;#41; &amp;#40;clj-&amp;gt;js &amp;#40;opts&amp;#41;&amp;#41; &amp;#40;response- s f&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In order to expose cljs api to nodejs consumers we need to export a ns:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;ns celestial.core ...&amp;#41;
+ 
+&amp;#40;defn main &amp;#91;&amp;#93;&amp;#41;
+
+; required even if we don't use a main
+&amp;#40;set! &amp;#42;main-cli-fn&amp;#42; main&amp;#41;
+
+; export this ns as a part of nodejs module
+&amp;#40;aset js/exports &amp;quot;core&amp;quot; celestial.core&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With that all in place we can require our cljs module from any other npm enabled project:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascipt&quot;&gt;{
+  &amp;quot;name&amp;quot;: &amp;quot;hubot-celestial&amp;quot;,
+  &amp;quot;version&amp;quot;: &amp;quot;0.0.1&amp;quot;,
+  &amp;quot;description&amp;quot;: &amp;quot;Hubot script for interacting with Celestial&amp;quot;,
+  &amp;quot;main&amp;quot;: &amp;quot;main.js&amp;quot;,
+  &amp;quot;scripts&amp;quot;: {
+  },
+  &amp;quot;repository&amp;quot;: &amp;quot;git://github.com/narkisr/hubot-celestial.git&amp;quot;,
+  &amp;quot;author&amp;quot;: &amp;quot;narkisr.com&amp;quot;,
+  &amp;quot;license&amp;quot;: &amp;quot;Apache-V2&amp;quot;,
+  &amp;quot;dependencies&amp;quot;: {
+    &amp;quot;coffee-script&amp;quot;: &amp;quot;&amp;#126;1.4.0&amp;quot;,
+    &amp;quot;hubot&amp;quot;: &amp;quot;&amp;#126;2.4.8&amp;quot;,
+    &amp;quot;hubocator&amp;quot;: &amp;quot;0.1.2&amp;quot;,
+    &amp;quot;cli-table&amp;quot; : &amp;quot;0.2.0&amp;quot;,
+    &amp;quot;underscore&amp;quot; :&amp;quot;1.4.4&amp;quot;,
+    &amp;quot;celestial-node&amp;quot;:&amp;quot;git://github.com/narkisr/celestial-node.git&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Requiring the api:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascipt&quot;&gt;celestial = require &amp;#40;'celestial-node'&amp;#41;
+celestial.core.get&amp;#95;system&amp;#40;id,&amp;#40;&amp;#40;b&amp;#41;-&amp;gt; msg.send systemTable&amp;#40;b&amp;#41;&amp;#41;, &amp;#40;&amp;#40;e&amp;#41;-&amp;gt; msg.send e&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h2&gt;Iv found cljs and nodejs to be a very powerfull (yet a bit young) combo to work with, it offers yet another very rich platform to run Clojure code on top of. I hope you will find it useful too.&lt;h4&gt;&lt;a name=&quot;footnotes:&quot;&gt;&lt;/a&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/celestial-node'&gt;celestial-node&lt;/a&gt; (most of the code preseted)&lt;/li&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/hubot-celestial'&gt;hubot-celestial&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+</description>
+<pubDate>
+Sat, 18 May 2013 00:00:00 +0300
+</pubDate>
+<author>
+Ronen Narkis
+</author>
+</item>
 <item>
 <guid>
 http://narkisr/posts/13-04-2013-tf101-cyanogenmod.html

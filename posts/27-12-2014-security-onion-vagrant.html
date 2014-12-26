@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Narkisr.com: Asus TF101 Cyanogenmod</title>
+    <title>Narkisr.com: Security onion vagrant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" >
     <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"> -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -51,59 +51,46 @@
 			  
 <div id="post">
     <div id="post-header">
-    <h2>Asus TF101 Cyanogenmod</h2>
+    <h2>Security onion vagrant</h2>
     <div id="post-meta">
         
-        <div class="date">April 13, 2013</div>
+        <div class="date">December 27, 2014</div>
     </div>
 </div>
 <div>
     
-    <h3><a name="intro"></a>Intro</h3>In this post ill try to cover in detail how to root your  <a href='http://www.amazon.com/Transformer-TF101-A1-10-1-Inch-Tablet-Separately/dp/B004U78J1G'>Asus TF101</a>  device.  Some of the difficuly in rooting android devices is lack of clear undestanding of the process combbined with lack of proper documentation, I hope to clear a bit of the myst in this post. <br /><h6><a name="disclaimer,&#95;i&#95;take&#95;no&#95;responsility&#95;if&#95;you&#95;brick&#95;you&#95;device&#95;or&#95;any&#95;other&#95;damage&#95;that&#95;this&#95;might&#95;inflict&#95;on&#95;your&#95;device,&#95;proceed&#95;at&#95;your&#95;own&#95;peril!"></a>DISCLAIMER, I take no responsility if you brick you device or any other damage that this might inflict on your device, proceed at your own peril!</h6><h4><a name="scheme"></a>Scheme</h4>A root session is composed from 4 steps: <ul><li>Rooting your device (basicly enabling root user access to underlying Linux system).</li><li>Install  ClockworkMod Recovery(http://forum.xda-developers.com/wiki/ClockworkMod_Recovery)  which is a recovery tool installed on the device, this enables unpacking of custom Android distributions on your device (like <a href='http://www.cyanogenmod.org/'>cyanogenmod</a> ")."</li><li>Booting into CWM and installing a custom ROM from a predownloaded zip file.</li><li>Instaling Google aps from a pre download zip file (the reason this is required is because Google forbided the bundling of its closed source product with the custom ROM).</li></ul><p>Lets begin with rooting the device, we will follow  <a href='http://setupguides.blogspot.co.il/2013/01/easily-root-asus-tf101-transformer.html'>this</a>  method, first we will install adb and fastboot (both are android tools for interacting with the device) as described  <a href='http://www.webupd8.org/2012/08/install-adb-and-fastboot-android-tools.html'>here</a> :</p><pre><code class="bash">$ sudo add-apt-repository ppa:nilarimogard/webupd8
-$ sudo apt-get update
-$ sudo apt-get install android-tools-adb android-tools-fastboot
-</code></pre><p>Now enable usb debbuging in your device and connect it to your pc, it should be detected by adb:</p><pre><code class="bash">$ adb devices                                                                  
-List of devices attached 
-xxxxxxxxxxxxxxx device
-</code></pre><p>Now we will download TF101_Root.zip which includes a script and blob file that will uploaded via adb </p><pre><code class="bash">$ wget http://ubuntuone.com/5xwKVscUxwgdnudw589ERd -O TF101&#95;Root.zip
-$ unzip TF101&#95;Root.zip
-# Now I follow root&#95;tf101.sh
-$ adb push recoveryblob /sdcard/
-$ adb shell mv /data/local/tmp /data/local/tmp.bak
-$ adb shell ln -s /dev/block/mmcblk0p4 /data/local/tmp
-$ adb reboot 
-# wait to device to boot before proceeding
-$ adb shell dd if=/sdcard/recoveryblob of=/dev/block/mmcblk0p4
-$ adb shell exit
-$ adb reboot 
-# wait to device to boot before proceeding
-$ adb push Superuser-3.0.7-efghi-signed.zip /sdcard/
-$ adb reboot 
-</code></pre><p>Now at the last boot follow the script maunal steps: <blockquote>  Shut down the Transformer manually and boot into recovery. To boot into recovery hold Power + Volume Down buttons and next confirm with Volume Up buked. Rogue XM recovery will boot.<br /> Select the option to wipe cache, wipe Dalvik cache, then choose Install zip file from internal storage and choose the Superuser-3.0.7-efghi-signed.zip. </blockquote></p><p>Congrates you have root access now.</p><p>Now lets head on to installing CWM, from your device download  <a href='http://goo.im/devs/RaymanFX/downloads/ClockWordMod-Recovery/TF101/cwm-6.0.2.1-notouch-hybrid.zip'>cwm-6.0.2.1-notouch-hybrid.zip</a>  as referenced from this forum <a href=' http://forum.xda-developers.com/showthread.php?t=1855686'>entry</a>  , reboot into recovery mode (same as before) and apply the zip, reboot again and use the volume-up and power button to enter into CWM recovery.</p><p>Once you see the CWM recovery loading and working we can proceed with installing the unofficial cyanogenmod as reviewed  <a href='http://forum.xda-developers.com/showthread.php?t=2010903'>here</a> , from within your device browser download  <a href='http://goo.im/getmd5/devs/RaymanFX/downloads/CyanogenMod-10.1/TF101/v0.8.0.zip'>v0.8.0.zip</a>  and Google apps  <a href='http://goo.im/devs/RaymanFX/downloads/Gapps/4.2&#95;gapps-jb-20121119.zip'>4.2&#95;gapps-jb-20121119.zip</a> , now boot into CWM and apply the v0.8.0.zip from internal sdcard, also clear the device and dalvik caches reboot into the new Android OS.</p><p>Note that it will be missing Google apps but we still need to boot into the new OS before applying the second Google apps zip, now its safe to boot into CWM and apply the 4.2_gapps-jb-20121119.zip, one last reboot and you should be greated with Google acount setup dialog.</p>
+    <h3><a name="intro"></a>Intro</h3>Setting up <a href='http://en.wikipedia.org/wiki/Intrusion&#95;detection&#95;system'>IDS</a> systems such as <a href='https://www.snort.org/'>snort</a> has always been a tedious task, <a href='http://blog.securityonion.net/p/securityonion.html'>Security onion</a> (or SO for short) is a solution that aims to change that.<p>SO publishes a <a href='https://launchpad.net/&#126;securityonion/+archive/ubuntu/stable'>PPA</a> which is Ubuntu 12.04 compatible and distributes a livecd <a href='http://sourceforge.net/projects/security-onion/'>ISO</a> for setting it up on physical machines.</p><p>In this post ill go through on how to setup SO vagrant box, enabling us to do fast iterations and provisioning development.</p><h4><a name="box&#95;setup"></a>BOX setup</h4><p>The first step is creating the SO box itself using <a href='https://www.packer.io/'>packer</a>:</p><pre><code class="bash">$ git clone git://github.com/narkisr/packer-security-onion.git 
+# won't work on a headless machine
+$ make virtualbox/security-onion-12.04.4  
+</code></pre><p>The box itself is quite heavily customized due to the requirements of SO, once the box was created we import it like any other:</p><pre><code class="bash">$ vagrant box add security-onion-12.04.4&#95;puppet-3.7.3 box/virtualbox/security-onion-12.04.4&#95;puppet&#95;3.7.3.box
+</code></pre><p>Now we are ready to start rolling vagrant.</p><h4><a name="vagrant"></a>Vagrant</h4><p>Perquisites:<ul><li><a href='https://github.com/opskeleton/opskeleton'>Opskeleton</a> defines the project layout of the following Vagrant/Puppet code base so make sure to <a href='https://github.com/opskeleton/opskeleton#installation'>have</a>.</li><li>SO itself requires a running GUI (so no headless servers).</li><li>Have a mirror port ready on your switch connected to a physical interface (if you want to capture meaningful traffic), note that you can customize the mirror port vagrant uses (using VAGRANT_MIRROR).</li></ul><pre><code class="bash">$ git clone git://github.com/opskeleton/security-onion-sandbox.git
+# Wont work on a headless machine
+$ gem install bundle
+$ bundle install
+$ librarian-puppet install
+# in order to customize mirror port use VAGRANT&#95;MIRROR=ifc
+$ vagrant up
+ </code></pre></p><p>Once the VM UI is running enter a terminal and start sosetup:</p><pre><code class="bash">$ sosetup
+</code></pre><p>On its first invocation the wizard will guide you through the network setup, choose eth0 as the management interface and eth1 as the monitor interface, reboot once done.</p><p>Once the machine is up run sosetup again to setup Sguil and Snorby u/p</p><pre><code class="bash">$ sosetup
+</code></pre><p>Once done you can either head on to <a href='https://localhost'>localhost</a> (from within the VM) or from the host use the forwarded ports <a href='https://localhost:8444'>snorby</a>.</p><h4><a name="footnotes:"></a>Footnotes:</h4><p><small> Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. </small> <small> ssh didn't work well </p>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/tags/cyanogenmod.html">cyanogenmod</a>
+    <a href="/tags/security.html">security</a>
     
-    <a href="/tags/asus.html">asus</a>
+    <a href="/tags/opskeleton.html">opskeleton</a>
     
-    <a href="/tags/tf101.html">tf101</a>
-    
-    <a href="/tags/android.html">android</a>
+    <a href="/tags/vagrant.html">vagrant</a>
     
 </div>
 
     <div id="prev-next">
         
-        <a href="/posts/18-05-2013-node-cljs.html">&laquo; Nodifying Clojure</a>
         
         
-        ||
-        
-        
-        <a href="/posts/24-07-2012-waiting-for.html">Waiting for your future &raquo;</a>
+        <a href="/posts/18-05-2013-node-cljs.html">Nodifying Clojure &raquo;</a>
         
     </div>
 
