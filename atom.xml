@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
 <channel>
-<atom:link href='http://narkisr' rel='self' type='application/rss+xml'/>
+<atom:link href='http://narkisr.com/' rel='self' type='application/rss+xml'/>
 <generator>
 clj-rss
 </generator>
@@ -9,23 +9,23 @@ clj-rss
 Narkisr.com
 </title>
 <link>
-http://narkisr
+http://narkisr.com/
 </link>
 <description>
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Sat, 27 Dec 2014 01:59:31 +0200
+Sat, 27 Dec 2014 03:23:04 +0200
 </lastBuildDate>
 <author>
 Ronen Narkis
 </author>
 <item>
 <guid>
-http://narkisr/posts/27-12-2014-security-onion-vagrant.html
+http://narkisr.com/posts/27-12-2014-security-onion-vagrant.html
 </guid>
 <link>
-http://narkisr/posts/27-12-2014-security-onion-vagrant.html
+http://narkisr.com/posts/27-12-2014-security-onion-vagrant.html
 </link>
 <title>
 Security onion vagrant
@@ -55,10 +55,10 @@ Ronen Narkis
 </item>
 <item>
 <guid>
-http://narkisr/posts/18-05-2013-node-cljs.html
+http://narkisr.com/posts/18-05-2013-node-cljs.html
 </guid>
 <link>
-http://narkisr/posts/18-05-2013-node-cljs.html
+http://narkisr.com/posts/18-05-2013-node-cljs.html
 </link>
 <title>
 Nodifying Clojure
@@ -214,10 +214,10 @@ Ronen Narkis
 </item>
 <item>
 <guid>
-http://narkisr/posts/13-04-2013-tf101-cyanogenmod.html
+http://narkisr.com/posts/13-04-2013-tf101-cyanogenmod.html
 </guid>
 <link>
-http://narkisr/posts/13-04-2013-tf101-cyanogenmod.html
+http://narkisr.com/posts/13-04-2013-tf101-cyanogenmod.html
 </link>
 <title>
 Asus TF101 Cyanogenmod
@@ -254,10 +254,10 @@ Ronen Narkis
 </item>
 <item>
 <guid>
-http://narkisr/posts/24-07-2012-waiting-for.html
+http://narkisr.com/posts/24-07-2012-waiting-for.html
 </guid>
 <link>
-http://narkisr/posts/24-07-2012-waiting-for.html
+http://narkisr.com/posts/24-07-2012-waiting-for.html
 </link>
 <title>
 Waiting for your future
@@ -321,10 +321,10 @@ Ronen Narkis
 </item>
 <item>
 <guid>
-http://narkisr/posts/20-07-2012-raspberri-pi.html
+http://narkisr.com/posts/20-07-2012-raspberri-pi.html
 </guid>
 <link>
-http://narkisr/posts/20-07-2012-raspberri-pi.html
+http://narkisr.com/posts/20-07-2012-raspberri-pi.html
 </link>
 <title>
 Raspberry foo
