@@ -1,12 +1,12 @@
 {:site-title       "Narkisr.com"
  :author           "Ronen Narkis"
  :description      "The blog of Ronen Narkis"
- :site-url         "http://narkisr"
+ :site-url         "http://narkisr.com/"
  :post-root        "posts"
  :tag-root         "tags"
  :page-root        "pages"
  :blog-prefix      ""
- :rss-name         "feed.xml"
+ :rss-name         "atom.xml"
  :recent-posts     3
  :post-date-format "dd-MM-yyyy"
  :sass-src         nil
