@@ -4,7 +4,7 @@
  :page-index 0
  :navbar? true}
 
- This page comes to sort though some of the more notable open source projects iv realease during the years, note that there are more interesting projects lists under my  [github ](https://github.com/narkisr)  account, ranging from  [puppet](http://puppetlabs.com/)  modules,  [dot-files](https://github.com/narkisr/.vim)  and notable projects as listed bellow , feel free to  [tweet](http://twitter.com/narkisr)  me about any of these.
+ This page comes to sort through some of the more notable open source projects iv realease during the years, note that there are more interesting projects lists under my  [github ](https://github.com/narkisr)  account, ranging from  [puppet](http://puppetlabs.com/)  modules,  [dot-files](https://github.com/narkisr/.vim)  and notable projects as listed bellow , feel free to  [tweet](http://twitter.com/narkisr)  me about any of these.
 
  <div class="row">
    <div class="col-md-4"><h3>Couchfuse</h3><p>Coucfuse is a FUSE file system implementation for the Couchdb nosql database, it enables the mount of a database and manipulation of documents, each document is mapped into a content and meta folders, <a href="http://narkisr.github.com/couch-fuse/">see</a> for more info.</p></div>
@@ -14,9 +14,9 @@
 
 <div class="col-md-4">
    <h3>Opskeleton</h3>
-   <p><a href="https://github.com/opskeleton/opskeleton">Opskeleton</a> is a Devops project workflow and management tool, it offer to manage the entire lifecycle of services from development testing to production by selectively choosing best practices, project layout and tools to compose such projects (called sandboxes).
+   <p><a href="https://github.com/opskeleton/opskeleton">Opskeleton</a> is a project workflow and management tool, it offer to manage the entire lifecycle of provisioning code from development to testing and production it composes best practices, standard layout and tools. 
 
-   At the [Opskeleton](url)organization a list of sandboxes is available, starting from jenkins to storm and security onion, 
+   The [Opskeleton](https://github.com/opskeleton) organization is the home for a growing list of provisioning projects ranging from [security-onion](https://github.com/opskeleton/security-onion-sandbox) to [kibana](https://github.com/opskeleton/kibana-sandbox) and list is just growing ..
   </p>
  </div>
  </div>
