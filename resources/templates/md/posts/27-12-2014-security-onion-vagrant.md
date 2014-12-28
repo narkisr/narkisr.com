@@ -6,6 +6,8 @@
 ### Intro
 Setting up [IDS](http://en.wikipedia.org/wiki/Intrusion_detection_system) systems such as [snort](https://www.snort.org/) has always been a tedious task, [Security onion](http://blog.securityonion.net/p/securityonion.html) (or SO for short) is a solution that aims to change that.
 
+It includes not only snort but also [ossec](http://www.ossec.net/) (a HIDS system), [ELSA](https://code.google.com/p/enterprise-log-search-and-archive/) for central logging management, [Snorby](https://www.snorby.org/) a dashboard for IDS events. 
+
 SO publishes a [PPA](https://launchpad.net/~securityonion/+archive/ubuntu/stable) which is Ubuntu 12.04 compatible and distributes a livecd [ISO](http://sourceforge.net/projects/security-onion/) for setting it up on physical machines.
 
 In this post ill go through on how to setup SO vagrant box, enabling us to do fast iterations and provisioning development.
