@@ -66,5 +66,5 @@ Once done you can either head on to [localhost](https://localhost) (from within 
 
 #### Footnotes:
 
-<small> Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. </small>
-<small> ssh didn't work well 
+* <small> Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. </small>
+* <small> openssh server didn't work well so the vagrant box is using dropbear instead.</small>
