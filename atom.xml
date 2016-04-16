@@ -15,7 +15,7 @@ http://narkisr.com/
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Sat, 16 Apr 2016 20:18:22 +0300
+Sat, 16 Apr 2016 20:26:37 +0300
 </lastBuildDate>
 <author>
 Ronen Narkis
@@ -31,11 +31,12 @@ http://narkisr.com/posts/16-04-2016-pi-crypt.html
 PI crypt
 </title>
 <description>
-&lt;h3&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h3&gt;Raspberry PI devices are on the rage now, they are cheap portable and run Linux, using such a device on a remote site (be it for remote backup or pentesting) requires you to keep sensitive data on remote sdcards/USB drives etc.&lt;p&gt;In this post ill walk though how to setup root encrypted RPi (using Luks on an external USB drive is much simpler and left as an exercise for the reader).&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;setup&quot;&gt;&lt;/a&gt;Setup&lt;/h3&gt;Iv used a lot of resources (see the &lt;a href='#footnotes'&gt;footnotes&lt;/a&gt;) and posts in order to get a working solution using Ubuntu 15.10 as the host and Raspbian &lt;a href='https://www.raspberrypi.org/downloads/raspbian/'&gt;Jessie lite&lt;/a&gt; as the Pi OS image.&lt;p&gt;First we will setup the sdcard:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# prepare the image
+&lt;h3&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h3&gt;Raspberry PI devices are on the rage now, they are cheap portable and run Linux, using such a device on a remote site (be it for remote backup or pentesting) requires you to keep sensitive data on remote sdcards/USB drives etc.&lt;p&gt;In this post ill cover how to setup root encrypted RPi.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;setup&quot;&gt;&lt;/a&gt;Setup&lt;/h3&gt;Iv used a lot of resources (see footnotes) and posts in order to get a working solution using Ubuntu 15.10 as the host and Raspbian &lt;a href='https://www.raspberrypi.org/downloads/raspbian/'&gt;Jessie lite&lt;/a&gt; as the Pi OS image.&lt;p&gt;First we will setup the sdcard:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# prepare the image
 $ wget https://downloads.raspberrypi.org/raspbian&amp;#95;lite&amp;#95;latest
+$ unzip raspbian&amp;#95;lite&amp;#95;latest
 # we assume the sdcard 
 $ dd if=2016-03-18-raspbian-jessie-lite.img of=/dev/sdb bs=4M
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Entering the chroot:&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ aptitude install qemu-user-static
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Entering the chroot:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ aptitude install qemu-user-static
 # chrooting mostly same as in kali
 $ mkdir -p /mnt/chroot/boot
 $ mount /dev/sdb2 /mnt/chroot/
@@ -49,7 +50,7 @@ $ cp /usr/bin/qemu-arm-static /mnt/chroot/usr/bin/
 $ LANG=C chroot /mnt/chroot/
 $ uname -a
  Linux foo 4.2.0-25-generic #30-Ubuntu SMP Mon Jan 18 12:31:50 UTC 2016 armv7l GNU/Linux
- &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Setting up initramf (yes your are running arm binaries on your x86 machine):&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# Comment out the single line in this file &amp;#40;or else apt-get wont work&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Setting up initramf (yes your are running arm binaries on your x86 machine):&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# Comment out the single line in this file &amp;#40;or else apt-get wont work&amp;#41;
 $ vi /etc/ld.so.preload
 $ apt-get update
 $ apt-get install busybox cryptsetup dropbear -y
@@ -150,7 +151,7 @@ $ /scripts/local-top/cryptroot
 $ kill -9 `ps | grep -m 1 'cryptroot' | cut -d ' ' -f 3`
 # once the pi loads you should be able to login as usual
 $ ssh pi@&amp;lt;ip&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h2&gt;&lt;p&gt;The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guides is a starting point for hopefully making a more sane process.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;footnotes:&quot;&gt;&lt;/a&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; The original tutorial for &lt;a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'&gt;Kali&lt;/a&gt; Linux which gives a good outline (doesn't work as is on Raspbian tough).&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'&gt;post&lt;/a&gt; which mainly helped me to solve 'qemu: uncaught target signal 4' error. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&amp;t=130268'&gt;post&lt;/a&gt; that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors &lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h2&gt;&lt;p&gt;The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guide is a starting point for a more automated approach.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;footnotes:&quot;&gt;&lt;/a&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; The original tutorial for &lt;a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'&gt;Kali&lt;/a&gt; Linux which gives a good outline (doesn't work as is on Raspbian tough).&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'&gt;post&lt;/a&gt; which mainly helped me to solve 'qemu: uncaught target signal 4' error. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&amp;t=130268'&gt;post&lt;/a&gt; that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors &lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
 Sat, 16 Apr 2016 00:00:00 +0300

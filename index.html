@@ -59,11 +59,12 @@
 </div>
 <div>
     
-    <h3><a name="intro"></a>Intro</h3>Raspberry PI devices are on the rage now, they are cheap portable and run Linux, using such a device on a remote site (be it for remote backup or pentesting) requires you to keep sensitive data on remote sdcards/USB drives etc.<p>In this post ill walk though how to setup root encrypted RPi (using Luks on an external USB drive is much simpler and left as an exercise for the reader).</p><h3><a name="setup"></a>Setup</h3>Iv used a lot of resources (see the <a href='#footnotes'>footnotes</a>) and posts in order to get a working solution using Ubuntu 15.10 as the host and Raspbian <a href='https://www.raspberrypi.org/downloads/raspbian/'>Jessie lite</a> as the Pi OS image.<p>First we will setup the sdcard:</p><pre><code class="bash"># prepare the image
+    <h3><a name="intro"></a>Intro</h3>Raspberry PI devices are on the rage now, they are cheap portable and run Linux, using such a device on a remote site (be it for remote backup or pentesting) requires you to keep sensitive data on remote sdcards/USB drives etc.<p>In this post ill cover how to setup root encrypted RPi.</p><h3><a name="setup"></a>Setup</h3>Iv used a lot of resources (see footnotes) and posts in order to get a working solution using Ubuntu 15.10 as the host and Raspbian <a href='https://www.raspberrypi.org/downloads/raspbian/'>Jessie lite</a> as the Pi OS image.<p>First we will setup the sdcard:</p><pre><code class="bash"># prepare the image
 $ wget https://downloads.raspberrypi.org/raspbian&#95;lite&#95;latest
+$ unzip raspbian&#95;lite&#95;latest
 # we assume the sdcard 
 $ dd if=2016-03-18-raspbian-jessie-lite.img of=/dev/sdb bs=4M
-</code></pre><p>Entering the chroot:<pre><code class="bash">$ aptitude install qemu-user-static
+</code></pre><p>Entering the chroot:</p><pre><code class="bash">$ aptitude install qemu-user-static
 # chrooting mostly same as in kali
 $ mkdir -p /mnt/chroot/boot
 $ mount /dev/sdb2 /mnt/chroot/
@@ -77,7 +78,7 @@ $ cp /usr/bin/qemu-arm-static /mnt/chroot/usr/bin/
 $ LANG=C chroot /mnt/chroot/
 $ uname -a
  Linux foo 4.2.0-25-generic #30-Ubuntu SMP Mon Jan 18 12:31:50 UTC 2016 armv7l GNU/Linux
- </code></pre></p><p>Setting up initramf (yes your are running arm binaries on your x86 machine):</p><pre><code class="bash"># Comment out the single line in this file &#40;or else apt-get wont work&#41;
+</code></pre><p>Setting up initramf (yes your are running arm binaries on your x86 machine):</p><pre><code class="bash"># Comment out the single line in this file &#40;or else apt-get wont work&#41;
 $ vi /etc/ld.so.preload
 $ apt-get update
 $ apt-get install busybox cryptsetup dropbear -y
@@ -178,7 +179,7 @@ $ /scripts/local-top/cryptroot
 $ kill -9 `ps | grep -m 1 'cryptroot' | cut -d ' ' -f 3`
 # once the pi loads you should be able to login as usual
 $ ssh pi@&lt;ip&gt;
-</code></pre><h2><a name="summary"></a>Summary</h2><p>The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guides is a starting point for hopefully making a more sane process.</p><h4><a name="footnotes:"></a>Footnotes:</h4><ul><li><small> The original tutorial for <a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'>Kali</a> Linux which gives a good outline (doesn't work as is on Raspbian tough).</small></li><li><small> A <a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'>post</a> which mainly helped me to solve 'qemu: uncaught target signal 4' error. </small></li><li><small> A <a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&t=130268'>post</a> that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors </small></li></ul>
+</code></pre><h2><a name="summary"></a>Summary</h2><p>The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guide is a starting point for a more automated approach.</p><h4><a name="footnotes:"></a>Footnotes:</h4><ul><li><small> The original tutorial for <a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'>Kali</a> Linux which gives a good outline (doesn't work as is on Raspbian tough).</small></li><li><small> A <a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'>post</a> which mainly helped me to solve 'qemu: uncaught target signal 4' error. </small></li><li><small> A <a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&t=130268'>post</a> that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors </small></li></ul>
 </div>
 
 <div id="post-tags">
