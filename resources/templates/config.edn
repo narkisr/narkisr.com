@@ -1,4 +1,5 @@
 {:site-title       "Narkisr.com"
+ :theme            "nucleus"
  :author           "Ronen Narkis"
  :description      "The blog of Ronen Narkis"
  :site-url         "http://narkisr.com/"
@@ -14,4 +15,11 @@
  :resources        ["css" "js" "404.html"]
  :keep-files       [".git"]
  :disqus?          true
- :disqus-shortname "narkisr.com"}
+ :hide-future-posts?   true
+ :clean-urls?          true
+ :ignored-files        [#"\.#.*" #".*\.swp$"]
+ :previews?            false
+ :disqus-shortname "narkisr.com"
+ :debug? false
+ :rss-filters []
+ }
