@@ -66,3 +66,8 @@ nav h1 {
     margin-bottom: -15px;
 }
 
+.img-circle {
+      border-radius: 10%;
+      max-width: 10%;
+}
+
