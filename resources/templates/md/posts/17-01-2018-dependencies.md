@@ -29,7 +29,7 @@ Managing dependencies is a balancing game and a delicate one at that, it takes e
 ### Do's and Don'ts
 
 * Map the dependencies you have and track them under an [SCM](https://git-scm.com/).
-* Use dependency managers to manage them (if non exists create them).
+* Use dependency managers to manage them (create them if none exists).
 * Trim dependencies once in a while, they tend to accumulate and grow like a wild plant.
 * Keep dependencies up to date, postponing updates for too long can cause your system to stagnate (there are tools that track out of date dependencies).
 * Minimize dependency just for a single feature/method/api, sometimes its better to copy and paste a function (assuming its self isolated).
