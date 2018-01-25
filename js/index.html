@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Narkisr.com</title>
+    <title>Narkisr.com: Posts Tagged &quot;js&quot;</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" >
     <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"> -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
-        <link href="css/screen.css" rel="stylesheet" type="text/css" />
-	  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	  <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -35,7 +35,7 @@
 		    <!-- nav links -->
 		    <div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-			  <li  class="active" ><a href="/">Home</a></li>
+			  <li ><a href="/">Home</a></li>
 			  <li ><a href="/archives/">Archives</a></li>
 			  
 			  <li >
@@ -56,45 +56,17 @@
 		    <div class="col-md-8">
 			<div id="content">
 			  
-<div id="post">
-    <div id="post-header">
-    <h2>The balancing game</h2>
-    <div id="post-meta">
-        
-        <div class="date">17 January 2018</div>
+<div id="posts-by-tag">
+    <div id="page-header">
+        <h2>Posts Tagged &quot;js&quot;</h2>
     </div>
-</div>
-<div>
+    <ul>
     
-    <h3 id="intro">Intro</h3><p>Dependencies exists in multiple shapes and forms in our software, some are easy to detect while other are hidden and insidious.</p><p>Common to all dependencies is that they have a great effect on the systems we create, in this short post ill try to make you aware on why its crucial to manage them properly and the damage that poor management can cause.</p><h3 id="where&#95;can&#95;we&#95;find&#95;them?">Where can we find them?</h3><ul><li>In External libraries our code depend upon.</li><li>Services that our systems use (Databases, external API's etc..).</li><li>Operating system, packages its running, its kernel version etc..</li><li>The hardware we deploy on, the network setup.</li><li>People we depends upon like developers, clients, investors and of course users.</li></ul><p>There are many other places that dependencies creep from just stop and think about it for a second.</p><h3 id="good&#95;or&#95;bad?">Good or bad?</h3><p>Like most things in life it depends (pun intended), any dependency can turn into a liability in the future.</p><p>It can make your code harder to change, make OS upgrade harder or cause security issues, that said using the right dependency course reduce the amount of work you need to do increase reuse and security.</p><p>Managing dependencies is a balancing game and a delicate one at that, it takes experience and trial and error to learn which dependencies are good and which we better avoid.</p><h3 id="do's&#95;and&#95;don'ts">Do's and Don'ts</h3><ul><li>Map the dependencies you have and track them under an <a href='https://git-scm.com/'>SCM</a>.</li><li>Use dependency managers to manage them (create them if none exists).</li><li>Trim dependencies once in a while, they tend to accumulate and grow like a wild plant.</li><li>Keep dependencies up to date, postponing updates for too long can cause your system to stagnate (there are tools that track out of date dependencies).</li><li>Minimize dependency just for a single feature/method/api, sometimes its better to copy and paste a function (assuming its self isolated).</li><li>Don't over minimize and re-invent stuff if it exists already <a href='https://en.wikipedia.org/wiki/Not_invented_here'>NIH</a>.</li></ul><h2 id="summary">Summary</h2><p>Dependencies can really change the faith of a projects (and companies) once a dependency has set in it may be really hard to detach, be cautious and aware to both the challenge and reward that your dependencies present.</p><h4 id="footnotes:">Footnotes:</h4><ul><li><small><a href='https://github.com/xsc/lein-ancient'>Lein Ancient</a> and <a href='https://github.com/ben-manes/gradle-versions-plugin'>Gradle Versions</a> are tools to track and report old dependencies.</small></li><li><small> <a href='https://gradle.org/'>Gradle</a>, <a href='https://leiningen.org/'>Lein</a>, <a href='http://bundler.io/'>Bundler</a>, <a href='https://github.com/pypa/pipfile'>Pipefile</a> are good examples of code dependency management tools.</small></li><li><small> <a href='https://wiki.debian.org/Apt'>Apt</a>, <a href='https://fedoraproject.org/wiki/DNF?rd=Dnf'>DNF</a> and <a href='https://chocolatey.org/'>Chocolatey</a> manage packages on a variety of OSes.</small></li><li><small> Configuration management tools such as <a href='https://puppet.com/'>Puppet</a> and <a href='https://www.chef.io/solutions/infrastructure-automation/'>Chef</a> manage dependencies of deployed components.<small></li></ul>
-</div>
-
-<div id="post-tags">
-    <b>Tags: </b>
+        <li>
+            <a href="/posts/18-05-2013-node-cljs/">Nodifying Clojure</a>
+        </li>
     
-    <a href="/dependencies/">dependencies</a>
-    
-    <a href="/design/">design</a>
-    
-    <a href="/management/">management</a>
-    
-    <a href="/software/">software</a>
-    
-</div>
-
-    
-    <div id="comments">
-        <a href="/posts/17-01-2018-dependencies/#disqus_thread">View Comments</a>
-    </div>
-    
-
-    <div id="prev-next">
-        
-        
-        
-        <a href="/posts/16-04-2016-pi-crypt/">PI crypt &raquo;</a>
-        
-    </div>
+    </ul>
 </div>
 
 			</div>
@@ -177,7 +149,7 @@
 		</div>
 		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-		<script src="js/highlight.pack.js" type="text/javascript"></script>
+		<script src="/js/highlight.pack.js" type="text/javascript"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
 	    </body>
 	  </html>

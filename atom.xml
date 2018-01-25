@@ -2,9 +2,6 @@
 <rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
 <channel>
 <atom:link href='http://narkisr.com/' rel='self' type='application/rss+xml'/>
-<generator>
-clj-rss
-</generator>
 <title>
 Narkisr.com
 </title>
@@ -15,23 +12,40 @@ http://narkisr.com/
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Sat, 16 Apr 2016 23:56:26 +0300
+Thu, 25 Jan 2018 21:41:59 +1100
 </lastBuildDate>
-<author>
-Ronen Narkis
-</author>
+<generator>
+clj-rss
+</generator>
 <item>
 <guid>
-http://narkisr.com/posts/16-04-2016-pi-crypt.html
+http://narkisr.com/posts/17-01-2018-dependencies/
 </guid>
 <link>
-http://narkisr.com/posts/16-04-2016-pi-crypt.html
+http://narkisr.com/posts/17-01-2018-dependencies/
+</link>
+<title>
+The balancing game
+</title>
+<description>
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;Dependencies exists in multiple shapes and forms in our software, some are easy to detect while other are hidden and insidious.&lt;/p&gt;&lt;p&gt;Common to all dependencies is that they have a great effect on the systems we create, in this short post ill try to make you aware on why its crucial to manage them properly and the damage that poor management can cause.&lt;/p&gt;&lt;h3 id=&quot;where&amp;#95;can&amp;#95;we&amp;#95;find&amp;#95;them?&quot;&gt;Where can we find them?&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;In External libraries our code depend upon.&lt;/li&gt;&lt;li&gt;Services that our systems use (Databases, external API's etc..).&lt;/li&gt;&lt;li&gt;Operating system, packages its running, its kernel version etc..&lt;/li&gt;&lt;li&gt;The hardware we deploy on, the network setup.&lt;/li&gt;&lt;li&gt;People we depends upon like developers, clients, investors and of course users.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;There are many other places that dependencies creep from just stop and think about it for a second.&lt;/p&gt;&lt;h3 id=&quot;good&amp;#95;or&amp;#95;bad?&quot;&gt;Good or bad?&lt;/h3&gt;&lt;p&gt;Like most things in life it depends (pun intended), any dependency can turn into a liability in the future.&lt;/p&gt;&lt;p&gt;It can make your code harder to change, make OS upgrade harder or cause security issues, that said using the right dependency course reduce the amount of work you need to do increase reuse and security.&lt;/p&gt;&lt;p&gt;Managing dependencies is a balancing game and a delicate one at that, it takes experience and trial and error to learn which dependencies are good and which we better avoid.&lt;/p&gt;&lt;h3 id=&quot;do's&amp;#95;and&amp;#95;don'ts&quot;&gt;Do's and Don'ts&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;Map the dependencies you have and track them under an &lt;a href='https://git-scm.com/'&gt;SCM&lt;/a&gt;.&lt;/li&gt;&lt;li&gt;Use dependency managers to manage them (create them if none exists).&lt;/li&gt;&lt;li&gt;Trim dependencies once in a while, they tend to accumulate and grow like a wild plant.&lt;/li&gt;&lt;li&gt;Keep dependencies up to date, postponing updates for too long can cause your system to stagnate (there are tools that track out of date dependencies).&lt;/li&gt;&lt;li&gt;Minimize dependency just for a single feature/method/api, sometimes its better to copy and paste a function (assuming its self isolated).&lt;/li&gt;&lt;li&gt;Don't over minimize and re-invent stuff if it exists already &lt;a href='https://en.wikipedia.org/wiki/Not_invented_here'&gt;NIH&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;Dependencies can really change the faith of a projects (and companies) once a dependency has set in it may be really hard to detach, be cautious and aware to both the challenge and reward that your dependencies present.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='https://github.com/xsc/lein-ancient'&gt;Lein Ancient&lt;/a&gt; and &lt;a href='https://github.com/ben-manes/gradle-versions-plugin'&gt;Gradle Versions&lt;/a&gt; are tools to track and report old dependencies.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; &lt;a href='https://gradle.org/'&gt;Gradle&lt;/a&gt;, &lt;a href='https://leiningen.org/'&gt;Lein&lt;/a&gt;, &lt;a href='http://bundler.io/'&gt;Bundler&lt;/a&gt;, &lt;a href='https://github.com/pypa/pipfile'&gt;Pipefile&lt;/a&gt; are good examples of code dependency management tools.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; &lt;a href='https://wiki.debian.org/Apt'&gt;Apt&lt;/a&gt;, &lt;a href='https://fedoraproject.org/wiki/DNF?rd=Dnf'&gt;DNF&lt;/a&gt; and &lt;a href='https://chocolatey.org/'&gt;Chocolatey&lt;/a&gt; manage packages on a variety of OSes.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; Configuration management tools such as &lt;a href='https://puppet.com/'&gt;Puppet&lt;/a&gt; and &lt;a href='https://www.chef.io/solutions/infrastructure-automation/'&gt;Chef&lt;/a&gt; manage dependencies of deployed components.&lt;small&gt;&lt;/li&gt;&lt;/ul&gt;
+</description>
+<pubDate>
+Wed, 17 Jan 2018 00:00:00 +1100
+</pubDate>
+</item>
+<item>
+<guid>
+http://narkisr.com/posts/16-04-2016-pi-crypt/
+</guid>
+<link>
+http://narkisr.com/posts/16-04-2016-pi-crypt/
 </link>
 <title>
 PI crypt
 </title>
 <description>
-&lt;h3&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h3&gt;Raspberry PI devices are on the rage now, they are cheap portable and run Linux, using such a device on a remote site (be it for remote backup or pentesting) requires you to keep sensitive data on remote sdcards/USB drives etc.&lt;p&gt;In this post ill cover how to setup root encrypted RPi.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;setup&quot;&gt;&lt;/a&gt;Setup&lt;/h3&gt;Iv used a lot of resources (see footnotes) and posts in order to get a working solution using Ubuntu 15.10 as the host and Raspbian &lt;a href='https://www.raspberrypi.org/downloads/raspbian/'&gt;Jessie lite&lt;/a&gt; as the Pi OS image.&lt;p&gt;First we will setup the sdcard:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# prepare the image
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;Raspberry PI devices are on the rage now, they are cheap portable and run Linux, using such a device on a remote site (be it for remote backup or pentesting) requires you to keep sensitive data on remote sdcards/USB drives etc.&lt;/p&gt;&lt;p&gt;In this post ill cover how to setup root encrypted RPi.&lt;/p&gt;&lt;h3 id=&quot;setup&quot;&gt;Setup&lt;/h3&gt;&lt;p&gt;Iv used a lot of resources (see footnotes) and posts in order to get a working solution using Ubuntu 15.10 as the host and Raspbian &lt;a href='https://www.raspberrypi.org/downloads/raspbian/'&gt;Jessie lite&lt;/a&gt; as the Pi OS image.&lt;/p&gt;&lt;p&gt;First we will setup the sdcard:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# prepare the image
 $ wget https://downloads.raspberrypi.org/raspbian&amp;#95;lite&amp;#95;latest
 $ unzip raspbian&amp;#95;lite&amp;#95;latest
 # we assume the sdcard 
@@ -143,7 +157,7 @@ $ umount /mnt/encrypted/
 $ rm -rf /mnt/backup
 $ sync
 $ cryptsetup luksClose /dev/mapper/crypt&amp;#95;sdcard
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now insert the SDcard into the PI and carry on to logging in.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;login&quot;&gt;&lt;/a&gt;Login&lt;/h3&gt;&lt;p&gt;The login process is now composed of two steps, first logging into the dropbear session and decrypt the drive, the second is the usual ssh login:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# find the IP by viewing the pi load screen
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now insert the SDcard into the PI and carry on to logging in.&lt;/p&gt;&lt;h3 id=&quot;login&quot;&gt;Login&lt;/h3&gt;&lt;p&gt;The login process is now composed of two steps, first logging into the dropbear session and decrypt the drive, the second is the usual ssh login:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# find the IP by viewing the pi load screen
 $ ssh -i private root@&amp;lt;ip&amp;gt;
 # Enter your key
 $ /scripts/local-top/cryptroot
@@ -151,60 +165,54 @@ $ /scripts/local-top/cryptroot
 $ kill -9 `ps | grep -m 1 'cryptroot' | cut -d ' ' -f 3`
 # once the pi loads you should be able to login as usual
 $ ssh pi@&amp;lt;ip&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h2&gt;&lt;p&gt;The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guide is a starting point for a more automated approach.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;footnotes:&quot;&gt;&lt;/a&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; The original tutorial for &lt;a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'&gt;Kali&lt;/a&gt; Linux which gives a good outline (doesn't work as is on Raspbian tough).&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'&gt;post&lt;/a&gt; which mainly helped me to solve 'qemu: uncaught target signal 4' error. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&amp;t=130268'&gt;post&lt;/a&gt; that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors &lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guide is a starting point for a more automated approach.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; The original tutorial for &lt;a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'&gt;Kali&lt;/a&gt; Linux which gives a good outline (doesn't work as is on Raspbian tough).&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'&gt;post&lt;/a&gt; which mainly helped me to solve 'qemu: uncaught target signal 4' error. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&amp;t=130268'&gt;post&lt;/a&gt; that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors &lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Sat, 16 Apr 2016 00:00:00 +0300
+Sat, 16 Apr 2016 00:00:00 +1000
 </pubDate>
-<author>
-Ronen Narkis
-</author>
 </item>
 <item>
 <guid>
-http://narkisr.com/posts/27-12-2014-security-onion-vagrant.html
+http://narkisr.com/posts/27-12-2014-security-onion-vagrant/
 </guid>
 <link>
-http://narkisr.com/posts/27-12-2014-security-onion-vagrant.html
+http://narkisr.com/posts/27-12-2014-security-onion-vagrant/
 </link>
 <title>
 Security onion vagrant
 </title>
 <description>
-&lt;h3&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h3&gt;Setting up &lt;a href='http://en.wikipedia.org/wiki/Intrusion&amp;#95;detection&amp;#95;system'&gt;IDS&lt;/a&gt; systems such as &lt;a href='https://www.snort.org/'&gt;snort&lt;/a&gt; has always been a tedious task, &lt;a href='http://blog.securityonion.net/p/securityonion.html'&gt;Security onion&lt;/a&gt; (or SO for short) is a solution that aims to change that.&lt;p&gt;It includes not only snort but also &lt;a href='http://www.ossec.net/'&gt;ossec&lt;/a&gt; (a HIDS system), &lt;a href='https://code.google.com/p/enterprise-log-search-and-archive/'&gt;ELSA&lt;/a&gt; for central logging management, &lt;a href='https://www.snorby.org/'&gt;Snorby&lt;/a&gt; a dashboard for IDS events. &lt;/p&gt;&lt;p&gt;SO publishes a &lt;a href='https://launchpad.net/&amp;#126;securityonion/+archive/ubuntu/stable'&gt;PPA&lt;/a&gt; which is Ubuntu 12.04 compatible and distributes a livecd &lt;a href='http://sourceforge.net/projects/security-onion/'&gt;ISO&lt;/a&gt; for setting it up on physical machines.&lt;/p&gt;&lt;p&gt;In this post ill go through on how to setup SO vagrant box, enabling us to do fast iterations and provisioning development.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;box&amp;#95;setup&quot;&gt;&lt;/a&gt;BOX setup&lt;/h4&gt;&lt;p&gt;The first step is creating the SO box itself using &lt;a href='https://www.packer.io/'&gt;packer&lt;/a&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ git clone git://github.com/narkisr/packer-security-onion.git 
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;Setting up &lt;a href='http://en.wikipedia.org/wiki/Intrusion_detection_system'&gt;IDS&lt;/a&gt; systems such as &lt;a href='https://www.snort.org/'&gt;snort&lt;/a&gt; has always been a tedious task, &lt;a href='http://blog.securityonion.net/p/securityonion.html'&gt;Security onion&lt;/a&gt; (or SO for short) is a solution that aims to change that.&lt;/p&gt;&lt;p&gt;It includes not only snort but also &lt;a href='http://www.ossec.net/'&gt;ossec&lt;/a&gt; (a HIDS system), &lt;a href='https://code.google.com/p/enterprise-log-search-and-archive/'&gt;ELSA&lt;/a&gt; for central logging management, &lt;a href='https://www.snorby.org/'&gt;Snorby&lt;/a&gt; a dashboard for IDS events. &lt;/p&gt;&lt;p&gt;SO publishes a &lt;a href='https://launchpad.net/~securityonion/+archive/ubuntu/stable'&gt;PPA&lt;/a&gt; which is Ubuntu 12.04 compatible and distributes a livecd &lt;a href='http://sourceforge.net/projects/security-onion/'&gt;ISO&lt;/a&gt; for setting it up on physical machines.&lt;/p&gt;&lt;p&gt;In this post ill go through on how to setup SO vagrant box, enabling us to do fast iterations and provisioning development.&lt;/p&gt;&lt;h4 id=&quot;box&amp;#95;setup&quot;&gt;BOX setup&lt;/h4&gt;&lt;p&gt;The first step is creating the SO box itself using &lt;a href='https://www.packer.io/'&gt;packer&lt;/a&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ git clone git://github.com/narkisr/packer-security-onion.git 
 # won't work on a headless machine
 $ make virtualbox/security-onion-12.04.4  
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The box itself is quite heavily customized due to the requirements of SO, once the box was created we import it like any other:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ vagrant box add security-onion-12.04.4&amp;#95;puppet-3.7.3 box/virtualbox/security-onion-12.04.4&amp;#95;puppet&amp;#95;3.7.3.box
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we are ready to start rolling vagrant.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;vagrant&quot;&gt;&lt;/a&gt;Vagrant&lt;/h4&gt;&lt;p&gt;Perquisites:&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/opskeleton/opskeleton'&gt;Opskeleton&lt;/a&gt; defines the project layout of the following Vagrant/Puppet code base so make sure to &lt;a href='https://github.com/opskeleton/opskeleton#installation'&gt;have&lt;/a&gt;.&lt;/li&gt;&lt;li&gt;SO itself requires a running GUI (so no headless servers).&lt;/li&gt;&lt;li&gt;Have a mirror port ready on your switch connected to a physical interface (if you want to capture meaningful traffic), note that you can customize the mirror port vagrant uses (using VAGRANT_MIRROR).&lt;/li&gt;&lt;/ul&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ git clone git://github.com/opskeleton/security-onion-sandbox.git
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we are ready to start rolling vagrant.&lt;/p&gt;&lt;h4 id=&quot;vagrant&quot;&gt;Vagrant&lt;/h4&gt;&lt;p&gt;Perquisites:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/opskeleton/opskeleton'&gt;Opskeleton&lt;/a&gt; defines the project layout of the following Vagrant/Puppet code base so make sure to &lt;a href='https://github.com/opskeleton/opskeleton#installation'&gt;have&lt;/a&gt;.&lt;/li&gt;&lt;li&gt;SO itself requires a running GUI (so no headless servers).&lt;/li&gt;&lt;li&gt;Have a mirror port ready on your switch connected to a physical interface (if you want to capture meaningful traffic), note that you can customize the mirror port vagrant uses (using VAGRANT_MIRROR).&lt;/li&gt;&lt;/ul&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ git clone git://github.com/opskeleton/security-onion-sandbox.git
 # Wont work on a headless machine
 $ gem install bundle
 $ bundle install
 $ librarian-puppet install
 # in order to customize mirror port use VAGRANT&amp;#95;MIRROR=ifc
 $ vagrant up
- &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Once the VM UI is running enter a terminal and start sosetup:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sosetup
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the VM UI is running enter a terminal and start sosetup:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sosetup
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On its first invocation the wizard will guide you through the network setup, choose eth0 as the management interface and eth1 as the monitor interface, reboot once done.&lt;/p&gt;&lt;p&gt;Once the machine is up run sosetup again to setup Sguil and Snorby u/p&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sosetup
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once done you can either head on to &lt;a href='https://localhost'&gt;localhost&lt;/a&gt; (from within the VM) or from the host use the forwarded ports &lt;a href='https://localhost:8444'&gt;snorby&lt;/a&gt;.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;footnotes:&quot;&gt;&lt;/a&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; openssh server didn't work well so the vagrant box is using dropbear instead.&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once done you can either head on to &lt;a href='https://localhost'&gt;localhost&lt;/a&gt; (from within the VM) or from the host use the forwarded ports &lt;a href='https://localhost:8444'&gt;snorby&lt;/a&gt;.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; openssh server didn't work well so the vagrant box is using dropbear instead.&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Sat, 27 Dec 2014 00:00:00 +0200
+Sat, 27 Dec 2014 00:00:00 +1100
 </pubDate>
-<author>
-Ronen Narkis
-</author>
 </item>
 <item>
 <guid>
-http://narkisr.com/posts/18-05-2013-node-cljs.html
+http://narkisr.com/posts/18-05-2013-node-cljs/
 </guid>
 <link>
-http://narkisr.com/posts/18-05-2013-node-cljs.html
+http://narkisr.com/posts/18-05-2013-node-cljs/
 </link>
 <title>
 Nodifying Clojure
 </title>
 <description>
-&lt;h2&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h2&gt;In this post ill cover how to integrate ClojureScript (cljs in short) with nodejs, the use case I was trying to solve was to write  &lt;a href='http://hubot.github.com/'&gt;hubot&lt;/a&gt;  integration script with a product Im working on.&lt;p&gt;Hubot scripts are written using Coffeescript but iv really missed the power of Clojure under my finger tips so iv decided to write a nodejs library with all the main logic in cljs. I wanted to have a full development stack with build, dependency management and testing support.&lt;/p&gt;&lt;p&gt;A key point to understand is that a cljs/node project is living on dual platforms at once, it has dependencies rooted in its nodejs package.json file and some in its cljs project.clj not to mention two build procedures.&lt;/p&gt;&lt;h4&gt;&lt;a name=&quot;setting&amp;#95;up:&quot;&gt;&lt;/a&gt;Setting up:&lt;/h4&gt;&lt;p&gt;The tool chain required in setting up a project include: &lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/technomancy/leiningen'&gt;lein&lt;/a&gt;  the Clojure build tool we will be using &lt;a href='https://github.com/emezeske/lein-cljsbuild'&gt;lein-cljsbuild&lt;/a&gt;  plugin in order to compile our cljs code.&lt;/li&gt;&lt;li&gt;&lt;a href='https://npmjs.org/'&gt;npm&lt;/a&gt;  which is the nodejs package management tool, I highly recommend using  &lt;a href='https://github.com/creationix/nvm'&gt;nvm&lt;/a&gt;  for setting it up. &lt;/li&gt;&lt;/ul&gt;The project structure includes:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;├── lib # our compiled cljs js file
+&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;&lt;p&gt;In this post ill cover how to integrate ClojureScript (cljs in short) with nodejs, the use case I was trying to solve was to write  &lt;a href='http://hubot.github.com/'&gt;hubot&lt;/a&gt;  integration script with a product Im working on.&lt;/p&gt;&lt;p&gt;Hubot scripts are written using Coffeescript but iv really missed the power of Clojure under my finger tips so iv decided to write a nodejs library with all the main logic in cljs. I wanted to have a full development stack with build, dependency management and testing support.&lt;/p&gt;&lt;p&gt;A key point to understand is that a cljs/node project is living on dual platforms at once, it has dependencies rooted in its nodejs package.json file and some in its cljs project.clj not to mention two build procedures.&lt;/p&gt;&lt;h4 id=&quot;setting&amp;#95;up:&quot;&gt;Setting up:&lt;/h4&gt;&lt;p&gt;The tool chain required in setting up a project include: &lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/technomancy/leiningen'&gt;lein&lt;/a&gt;  the Clojure build tool we will be using &lt;a href='https://github.com/emezeske/lein-cljsbuild'&gt;lein-cljsbuild&lt;/a&gt;  plugin in order to compile our cljs code.&lt;/li&gt;&lt;li&gt;&lt;a href='https://npmjs.org/'&gt;npm&lt;/a&gt;  which is the nodejs package management tool, I highly recommend using  &lt;a href='https://github.com/creationix/nvm'&gt;nvm&lt;/a&gt;  for setting it up.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The project structure includes:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;├── lib # our compiled cljs js file
 ├── Makefile # nodejs build tasks
 ├── node&amp;#95;modules # npm local libraries
 ├── package.json # npm dependencies
@@ -243,7 +251,7 @@ Nodifying Clojure
  $ lein cljsbuild once 
  # auto compilation on save
  $ lein cljsbuild auto
-&lt;/code&gt;&lt;/pre&gt;&lt;h4&gt;&lt;a name=&quot;testing:&quot;&gt;&lt;/a&gt;Testing:&lt;/h4&gt;&lt;p&gt;Another key aspect is a testing framework, most cljs testing frameworks deal with testing browser code (and require phantom js), the only one that iv found to run well on nodejs and has a cljs DSL is  &lt;a href='https://github.com/hsalokor/litmus'&gt;litmus&lt;/a&gt;  which wrapps around  &lt;a href='http://visionmedia.github.io/mocha/'&gt;mocha.js&lt;/a&gt; , currently its not up on Clojars so build it locally using lein install.&lt;/p&gt;&lt;p&gt;The following show cases how a litmus test looks like:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt; &amp;#40;describe &amp;quot;system manipulations&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&quot;testing:&quot;&gt;Testing:&lt;/h4&gt;&lt;p&gt;Another key aspect is a testing framework, most cljs testing frameworks deal with testing browser code (and require phantom js), the only one that iv found to run well on nodejs and has a cljs DSL is  &lt;a href='https://github.com/hsalokor/litmus'&gt;litmus&lt;/a&gt;  which wrapps around  &lt;a href='http://visionmedia.github.io/mocha/'&gt;mocha.js&lt;/a&gt; , currently its not up on Clojars so build it locally using lein install.&lt;/p&gt;&lt;p&gt;The following show cases how a litmus test looks like:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt; &amp;#40;describe &amp;quot;system manipulations&amp;quot;
    &amp;#40;given &amp;quot;we store a new system&amp;quot;  
       &amp;#40;it-async &amp;quot;creates a new id&amp;quot;    
         &amp;#40;create-system &amp;#40;slurp-edn &amp;quot;fixtures/redis-system.edn&amp;quot;&amp;#41; 
@@ -343,27 +351,24 @@ clean:
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Requiring the api:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascipt&quot;&gt;celestial = require &amp;#40;'celestial-node'&amp;#41;
 celestial.core.get&amp;#95;system&amp;#40;id,&amp;#40;&amp;#40;b&amp;#41;-&amp;gt; msg.send systemTable&amp;#40;b&amp;#41;&amp;#41;, &amp;#40;&amp;#40;e&amp;#41;-&amp;gt; msg.send e&amp;#41;&amp;#41;
-&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h2&gt;Iv found cljs and nodejs to be a very powerfull (yet a bit young) combo to work with, it offers yet another very rich platform to run Clojure code on top of. I hope you will find it useful too.&lt;h4&gt;&lt;a name=&quot;footnotes:&quot;&gt;&lt;/a&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/celestial-node'&gt;celestial-node&lt;/a&gt; (most of the code preseted)&lt;/li&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/hubot-celestial'&gt;hubot-celestial&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;Iv found cljs and nodejs to be a very powerfull (yet a bit young) combo to work with, it offers yet another very rich platform to run Clojure code on top of. I hope you will find it useful too.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/celestial-node'&gt;celestial-node&lt;/a&gt; (most of the code preseted)&lt;/li&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/hubot-celestial'&gt;hubot-celestial&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Sat, 18 May 2013 00:00:00 +0300
+Sat, 18 May 2013 00:00:00 +1000
 </pubDate>
-<author>
-Ronen Narkis
-</author>
 </item>
 <item>
 <guid>
-http://narkisr.com/posts/13-04-2013-tf101-cyanogenmod.html
+http://narkisr.com/posts/13-04-2013-tf101-cyanogenmod/
 </guid>
 <link>
-http://narkisr.com/posts/13-04-2013-tf101-cyanogenmod.html
+http://narkisr.com/posts/13-04-2013-tf101-cyanogenmod/
 </link>
 <title>
 Asus TF101 Cyanogenmod
 </title>
 <description>
-&lt;h3&gt;&lt;a name=&quot;intro&quot;&gt;&lt;/a&gt;Intro&lt;/h3&gt;In this post ill try to cover in detail how to root your  &lt;a href='http://www.amazon.com/Transformer-TF101-A1-10-1-Inch-Tablet-Separately/dp/B004U78J1G'&gt;Asus TF101&lt;/a&gt;  device.  Some of the difficuly in rooting android devices is lack of clear undestanding of the process combbined with lack of proper documentation, I hope to clear a bit of the myst in this post. &lt;br /&gt;&lt;h6&gt;&lt;a name=&quot;disclaimer,&amp;#95;i&amp;#95;take&amp;#95;no&amp;#95;responsility&amp;#95;if&amp;#95;you&amp;#95;brick&amp;#95;you&amp;#95;device&amp;#95;or&amp;#95;any&amp;#95;other&amp;#95;damage&amp;#95;that&amp;#95;this&amp;#95;might&amp;#95;inflict&amp;#95;on&amp;#95;your&amp;#95;device,&amp;#95;proceed&amp;#95;at&amp;#95;your&amp;#95;own&amp;#95;peril!&quot;&gt;&lt;/a&gt;DISCLAIMER, I take no responsility if you brick you device or any other damage that this might inflict on your device, proceed at your own peril!&lt;/h6&gt;&lt;h4&gt;&lt;a name=&quot;scheme&quot;&gt;&lt;/a&gt;Scheme&lt;/h4&gt;A root session is composed from 4 steps: &lt;ul&gt;&lt;li&gt;Rooting your device (basicly enabling root user access to underlying Linux system).&lt;/li&gt;&lt;li&gt;Install  ClockworkMod Recovery(http://forum.xda-developers.com/wiki/ClockworkMod_Recovery)  which is a recovery tool installed on the device, this enables unpacking of custom Android distributions on your device (like &lt;a href='http://www.cyanogenmod.org/'&gt;cyanogenmod&lt;/a&gt; &quot;).&quot;&lt;/li&gt;&lt;li&gt;Booting into CWM and installing a custom ROM from a predownloaded zip file.&lt;/li&gt;&lt;li&gt;Instaling Google aps from a pre download zip file (the reason this is required is because Google forbided the bundling of its closed source product with the custom ROM).&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Lets begin with rooting the device, we will follow  &lt;a href='http://setupguides.blogspot.co.il/2013/01/easily-root-asus-tf101-transformer.html'&gt;this&lt;/a&gt;  method, first we will install adb and fastboot (both are android tools for interacting with the device) as described  &lt;a href='http://www.webupd8.org/2012/08/install-adb-and-fastboot-android-tools.html'&gt;here&lt;/a&gt; :&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sudo add-apt-repository ppa:nilarimogard/webupd8
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;In this post ill try to cover in detail how to root your  &lt;a href='http://www.amazon.com/Transformer-TF101-A1-10-1-Inch-Tablet-Separately/dp/B004U78J1G'&gt;Asus TF101&lt;/a&gt;  device.  Some of the difficuly in rooting android devices is lack of clear undestanding of the process combbined with lack of proper documentation, I hope to clear a bit of the myst in this post. &lt;br /&gt;&lt;/p&gt;&lt;h6 id=&quot;disclaimer,&amp;#95;i&amp;#95;take&amp;#95;no&amp;#95;responsility&amp;#95;if&amp;#95;you&amp;#95;brick&amp;#95;you&amp;#95;device&amp;#95;or&amp;#95;any&amp;#95;other&amp;#95;damage&amp;#95;that&amp;#95;this&amp;#95;might&amp;#95;inflict&amp;#95;on&amp;#95;your&amp;#95;device,&amp;#95;proceed&amp;#95;at&amp;#95;your&amp;#95;own&amp;#95;peril!&quot;&gt;DISCLAIMER, I take no responsility if you brick you device or any other damage that this might inflict on your device, proceed at your own peril!&lt;/h6&gt;&lt;h4 id=&quot;scheme&quot;&gt;Scheme&lt;/h4&gt;&lt;p&gt;A root session is composed from 4 steps: &lt;/p&gt;&lt;ul&gt;&lt;li&gt;Rooting your device (basicly enabling root user access to underlying Linux system).&lt;/li&gt;&lt;li&gt;Install  ClockworkMod Recovery(http://forum.xda-developers.com/wiki/ClockworkMod_Recovery)  which is a recovery tool installed on the device, this enables unpacking of custom Android distributions on your device (like &lt;a href='http://www.cyanogenmod.org/'&gt;cyanogenmod&lt;/a&gt; &quot;).&quot;&lt;/li&gt;&lt;li&gt;Booting into CWM and installing a custom ROM from a predownloaded zip file.&lt;/li&gt;&lt;li&gt;Instaling Google aps from a pre download zip file (the reason this is required is because Google forbided the bundling of its closed source product with the custom ROM).&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Lets begin with rooting the device, we will follow  &lt;a href='http://setupguides.blogspot.co.il/2013/01/easily-root-asus-tf101-transformer.html'&gt;this&lt;/a&gt;  method, first we will install adb and fastboot (both are android tools for interacting with the device) as described  &lt;a href='http://www.webupd8.org/2012/08/install-adb-and-fastboot-android-tools.html'&gt;here&lt;/a&gt; :&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sudo add-apt-repository ppa:nilarimogard/webupd8
 $ sudo apt-get update
 $ sudo apt-get install android-tools-adb android-tools-fastboot
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now enable usb debbuging in your device and connect it to your pc, it should be detected by adb:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ adb devices                                                                  
@@ -383,27 +388,24 @@ $ adb reboot
 # wait to device to boot before proceeding
 $ adb push Superuser-3.0.7-efghi-signed.zip /sdcard/
 $ adb reboot 
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now at the last boot follow the script maunal steps: &lt;blockquote&gt;  Shut down the Transformer manually and boot into recovery. To boot into recovery hold Power + Volume Down buttons and next confirm with Volume Up buked. Rogue XM recovery will boot.&lt;br /&gt; Select the option to wipe cache, wipe Dalvik cache, then choose Install zip file from internal storage and choose the Superuser-3.0.7-efghi-signed.zip. &lt;/blockquote&gt;&lt;/p&gt;&lt;p&gt;Congrates you have root access now.&lt;/p&gt;&lt;p&gt;Now lets head on to installing CWM, from your device download  &lt;a href='http://goo.im/devs/RaymanFX/downloads/ClockWordMod-Recovery/TF101/cwm-6.0.2.1-notouch-hybrid.zip'&gt;cwm-6.0.2.1-notouch-hybrid.zip&lt;/a&gt;  as referenced from this forum &lt;a href=' http://forum.xda-developers.com/showthread.php?t=1855686'&gt;entry&lt;/a&gt;  , reboot into recovery mode (same as before) and apply the zip, reboot again and use the volume-up and power button to enter into CWM recovery.&lt;/p&gt;&lt;p&gt;Once you see the CWM recovery loading and working we can proceed with installing the unofficial cyanogenmod as reviewed  &lt;a href='http://forum.xda-developers.com/showthread.php?t=2010903'&gt;here&lt;/a&gt; , from within your device browser download  &lt;a href='http://goo.im/getmd5/devs/RaymanFX/downloads/CyanogenMod-10.1/TF101/v0.8.0.zip'&gt;v0.8.0.zip&lt;/a&gt;  and Google apps  &lt;a href='http://goo.im/devs/RaymanFX/downloads/Gapps/4.2&amp;#95;gapps-jb-20121119.zip'&gt;4.2&amp;#95;gapps-jb-20121119.zip&lt;/a&gt; , now boot into CWM and apply the v0.8.0.zip from internal sdcard, also clear the device and dalvik caches reboot into the new Android OS.&lt;/p&gt;&lt;p&gt;Note that it will be missing Google apps but we still need to boot into the new OS before applying the second Google apps zip, now its safe to boot into CWM and apply the 4.2_gapps-jb-20121119.zip, one last reboot and you should be greated with Google acount setup dialog.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now at the last boot follow the script maunal steps: &lt;blockquote&gt;  Shut down the Transformer manually and boot into recovery. To boot into recovery hold Power + Volume Down buttons and next confirm with Volume Up buked. Rogue XM recovery will boot.&lt;br /&gt; Select the option to wipe cache, wipe Dalvik cache, then choose Install zip file from internal storage and choose the Superuser-3.0.7-efghi-signed.zip. &lt;/blockquote&gt;&lt;/p&gt;&lt;p&gt;Congrates you have root access now.&lt;/p&gt;&lt;p&gt;Now lets head on to installing CWM, from your device download  &lt;a href='http://goo.im/devs/RaymanFX/downloads/ClockWordMod-Recovery/TF101/cwm-6.0.2.1-notouch-hybrid.zip'&gt;cwm-6.0.2.1-notouch-hybrid.zip&lt;/a&gt;  as referenced from this forum &lt;a href='' title=http://forum.xda-developers.com/showthread.php?t=1855686&gt;entry&lt;/a&gt;  , reboot into recovery mode (same as before) and apply the zip, reboot again and use the volume-up and power button to enter into CWM recovery.&lt;/p&gt;&lt;p&gt;Once you see the CWM recovery loading and working we can proceed with installing the unofficial cyanogenmod as reviewed  &lt;a href='http://forum.xda-developers.com/showthread.php?t=2010903'&gt;here&lt;/a&gt; , from within your device browser download  &lt;a href='http://goo.im/getmd5/devs/RaymanFX/downloads/CyanogenMod-10.1/TF101/v0.8.0.zip'&gt;v0.8.0.zip&lt;/a&gt;  and Google apps  &lt;a href='http://goo.im/devs/RaymanFX/downloads/Gapps/4.2_gapps-jb-20121119.zip'&gt;4.2_gapps-jb-20121119.zip&lt;/a&gt; , now boot into CWM and apply the v0.8.0.zip from internal sdcard, also clear the device and dalvik caches reboot into the new Android OS.&lt;/p&gt;&lt;p&gt;Note that it will be missing Google apps but we still need to boot into the new OS before applying the second Google apps zip, now its safe to boot into CWM and apply the 4.2_gapps-jb-20121119.zip, one last reboot and you should be greated with Google acount setup dialog.&lt;/p&gt;
 </description>
 <pubDate>
-Sat, 13 Apr 2013 00:00:00 +0300
+Sat, 13 Apr 2013 00:00:00 +1000
 </pubDate>
-<author>
-Ronen Narkis
-</author>
 </item>
 <item>
 <guid>
-http://narkisr.com/posts/24-07-2012-waiting-for.html
+http://narkisr.com/posts/24-07-2012-waiting-for/
 </guid>
 <link>
-http://narkisr.com/posts/24-07-2012-waiting-for.html
+http://narkisr.com/posts/24-07-2012-waiting-for/
 </link>
 <title>
 Waiting for your future
 </title>
 <description>
-&lt;p&gt; So, you've got an action that you want to run in parallel using multiple cores, in pure Java land you have the old fashioned Thread.start which takes a Runnable implementation, another option is the  &lt;a href='http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ExecutorService.html'&gt;ExecutorService&lt;/a&gt;  which uses a pool to store a collection of reusable threads (in fact its the same pool that agents use).  Clojure on the other hand has the  &lt;a href='http://clojuredocs.org/clojure&amp;#95;core/clojure.core/future'&gt;future&lt;/a&gt;  macro which takes a body of code and runs it on a seprate thread:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;def f &amp;#40;future &amp;#40;println &amp;quot;hello&amp;quot;&amp;#41;&amp;#41;&amp;#41;
+&lt;p&gt; So, you've got an action that you want to run in parallel using multiple cores, in pure Java land you have the old fashioned Thread.start which takes a Runnable implementation, another option is the  &lt;a href='http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ExecutorService.html'&gt;ExecutorService&lt;/a&gt;  which uses a pool to store a collection of reusable threads (in fact its the same pool that agents use).  Clojure on the other hand has the  &lt;a href='http://clojuredocs.org/clojure_core/clojure.core/future'&gt;future&lt;/a&gt;  macro which takes a body of code and runs it on a seprate thread:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;def f &amp;#40;future &amp;#40;println &amp;quot;hello&amp;quot;&amp;#41;&amp;#41;&amp;#41;
   
 @f ; will block here until it executes 
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Futures use an unbound thread pool which is good for IO bound actions, lets assume we have a sequence (a large one at that) that serves as an input to that heavy IO operation, we want to parallelize the operation on multiple cores, the naive approach will be:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt; &amp;#40;defn action &amp;#91;i&amp;#93;
@@ -414,7 +416,7 @@ Waiting for your future
   &amp;#40;map &amp;#40;future &amp;#40;action %&amp;#41;&amp;#41; &amp;#40;range 1000&amp;#41;&amp;#41;&amp;#41;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Running this code will result with no future run, the main thread will exit before any future gets the chance to execute (since its async), in order to wait for them to run we need to deref all futures,&lt;br /&gt;&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt; &amp;#40;defn -main &amp;#91;&amp;#93;
   &amp;#40;map deref &amp;#40;map &amp;#40;future &amp;#40;action %&amp;#41;&amp;#41; &amp;#40;range 1000&amp;#41;&amp;#41;&amp;#41;&amp;#41; 
-&lt;/code&gt;&lt;/pre&gt;This looks good and indeed when we run it we notice the following output&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This looks good and indeed when we run it we notice the following output&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;0
 1 
 .. ; omitted for brevity 
 .. 
@@ -453,27 +455,24 @@ nil nil nil  ; after a delay
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I found this method to offer a balance between the spread of work and predictable load on the target.&lt;/p&gt;
 </description>
 <pubDate>
-Tue, 24 Jul 2012 00:00:00 +0300
+Tue, 24 Jul 2012 00:00:00 +1000
 </pubDate>
-<author>
-Ronen Narkis
-</author>
 </item>
 <item>
 <guid>
-http://narkisr.com/posts/20-07-2012-raspberri-pi.html
+http://narkisr.com/posts/20-07-2012-raspberri-pi/
 </guid>
 <link>
-http://narkisr.com/posts/20-07-2012-raspberri-pi.html
+http://narkisr.com/posts/20-07-2012-raspberri-pi/
 </link>
 <title>
 Raspberry foo
 </title>
 <description>
-&lt;p&gt;Iv been lucky to get my hands on a raspberry pie, from the get go it was clear that this device isn't ready for the faint hearted, while there is abundant content around for how to start going the pi is a moving target and things change quickly, this post is a quick start for getting pie going. &lt;/p&gt;&lt;h5&gt;&lt;a name=&quot;in&amp;#95;this&amp;#95;post&amp;#95;will&amp;#95;cover&quot;&gt;&lt;/a&gt;In this post will cover&lt;/h5&gt;&lt;ul&gt;&lt;li&gt;Downloading sdcard image and \&quot;dd'ing\&quot;&lt;/li&gt;&lt;li&gt;Enabling SSH and updating Pi's frimware.&lt;/li&gt;&lt;li&gt;Enabling wifi with the 8192cu chipset:p&lt;/li&gt;&lt;/ul&gt;&lt;h5&gt;&lt;a name=&quot;downloading&amp;#95;and&amp;#95;dding&quot;&gt;&lt;/a&gt;Downloading and dding&lt;/h5&gt;The pi site offers both Arch and Debian  &lt;a href='http://www.raspberrypi.org/downloads'&gt;images&lt;/a&gt;, iv went ahead with Debian mainly since its closer to Ubuntu, note that there are  [beta] (http://rpi-developers.com/frs/download.php/file/20)  &quot; versions out there but iv found the stock one working best.&quot;.&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt; $ sudo dd bs=1M if=debian6-19-04-2012.img of=/dev/sdb
+&lt;p&gt;Iv been lucky to get my hands on a raspberry pie, from the get go it was clear that this device isn't ready for the faint hearted, while there is abundant content around for how to start going the pi is a moving target and things change quickly, this post is a quick start for getting pie going. &lt;/p&gt;&lt;h5 id=&quot;in&amp;#95;this&amp;#95;post&amp;#95;will&amp;#95;cover&quot;&gt;In this post will cover&lt;/h5&gt;&lt;ul&gt;&lt;li&gt;Downloading sdcard image and \&quot;dd'ing\&quot;&lt;/li&gt;&lt;li&gt;Enabling SSH and updating Pi's frimware.&lt;/li&gt;&lt;li&gt;Enabling wifi with the 8192cu chipset:p&lt;/li&gt;&lt;/ul&gt;&lt;h5 id=&quot;downloading&amp;#95;and&amp;#95;dding&quot;&gt;Downloading and dding&lt;/h5&gt;&lt;p&gt;The pi site offers both Arch and Debian  &lt;a href='http://www.raspberrypi.org/downloads'&gt;images&lt;/a&gt; , iv went ahead with Debian mainly since its closer to Ubuntu, note that there are  [beta] (http://rpi-developers.com/frs/download.php/file/20)  &quot; versions out there but iv found the stock one working best.&quot;.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt; $ sudo dd bs=1M if=debian6-19-04-2012.img of=/dev/sdb
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When its done push the sdcard into its slot, make sure to connect the screen before powering up (iv had issue with connecting DVI cable once it was running),&lt;br /&gt; as the boot is done connect it to the internet and run all the updates (note sudo password is raspberry by default, change it afterwards).&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ sudo aptitude update
 $ sudo aptitude upgrade
-&lt;/code&gt;&lt;/pre&gt;&lt;h5&gt;&lt;a name=&quot;sshing&quot;&gt;&lt;/a&gt;SSHing&lt;/h5&gt;Its time to get our monitor back, we will enable SSH so we can work remotely:&lt;br /&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# boot enable
+&lt;/code&gt;&lt;/pre&gt;&lt;h5 id=&quot;sshing&quot;&gt;SSHing&lt;/h5&gt;&lt;p&gt;Its time to get our monitor back, we will enable SSH so we can work remotely:&lt;br /&gt;&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;# boot enable
 $ sudo update-rc.d ssh
 
 # ssh won't start without this
@@ -491,12 +490,12 @@ $ sudo apt-get install git-core
 # avoiding http://tinyurl.com/cbauu4w  
 $ sudo ldconfig
 $ sudo rpi-update  
- &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;h5&gt;&lt;a name=&quot;wifi&quot;&gt;&lt;/a&gt;Wifi&lt;/h5&gt;The hardest part in setting up the pi is enabling wireless, this boils down to two main reasons, power consumption and driver compatibility (kernel version wise). The pi is powered by a 5v power supply (usb phone charger), this means that it has little power to spare for devices connected to its usb ports, high power long range wifi dongle require too much juice. &lt;p&gt;Among the low bandwidth cost adapters that iv found the  &lt;a href='http://www.amazon.co.uk/Edimax-EW-7811UN-Wireless-802-11b-150Mbps/dp/B003MTTJOY'&gt;EW-7811UN&lt;/a&gt;  draws very little power, in addition it has a very low profile making it barely visible on the pi board, now comes the fun part of making it work.&lt;/p&gt;&lt;p&gt;The info of how setting it up is scattered and inconsistent, the best source out there for setting it up is this forum  &lt;a href='http://www.raspberrypi.org/phpBB3/viewtopic.php?t=6256'&gt;post&lt;/a&gt;   by MrEngman , the post provides a  &lt;a href='http://dl.dropbox.com/u/80256631/install-rtl8188cus.sh'&gt;shell script&lt;/a&gt;  and  &lt;a href=' http://dl.dropbox.com/u/80256631/install-rtl8188cus.txt'&gt;instructions&lt;/a&gt;  on how to use it,  under compatibility section you can see which driver version matches a kernel version&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ uname -a 
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;h5 id=&quot;wifi&quot;&gt;Wifi&lt;/h5&gt;&lt;p&gt;The hardest part in setting up the pi is enabling wireless, this boils down to two main reasons, power consumption and driver compatibility (kernel version wise).  The pi is powered by a 5v power supply (usb phone charger), this means that it has little power to spare for devices connected to its usb ports, high power long range wifi dongle require too much juice. &lt;/p&gt;&lt;p&gt;Among the low bandwidth cost adapters that iv found the  &lt;a href='http://www.amazon.co.uk/Edimax-EW-7811UN-Wireless-802-11b-150Mbps/dp/B003MTTJOY'&gt;EW-7811UN&lt;/a&gt;  draws very little power, in addition it has a very low profile making it barely visible on the pi board, now comes the fun part of making it work.&lt;/p&gt;&lt;p&gt;The info of how setting it up is scattered and inconsistent, the best source out there for setting it up is this forum  &lt;a href='http://www.raspberrypi.org/phpBB3/viewtopic.php?t=6256'&gt;post&lt;/a&gt;   by MrEngman , the post provides a  &lt;a href='http://dl.dropbox.com/u/80256631/install-rtl8188cus.sh'&gt;shell script&lt;/a&gt;  and  &lt;a href='' title=http://dl.dropbox.com/u/80256631/install-rtl8188cus.txt&gt;instructions&lt;/a&gt;  on how to use it,  under compatibility section you can see which driver version matches a kernel version&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ uname -a 
 Linux raspberrypi 3.1.9+ #171 PREEMPT Tue Jul 17 01:08:22 BST 2012 armv6l GNU/Linux
 
 # The matching driver version 
 rtl8188cus driver versions and compatible Linux versions
-
+-------------------------------------------------------- 
 
 Driver tar file: 8192cu-20120701.tar.gz &amp;#40;http://dl.dropbox.com/u/80256631/8192cu-20120701.tar.gz&amp;#41;
 For kernel versions:
@@ -522,11 +521,8 @@ wlan0     Link encap:Ethernet  HWaddr 00:1f:1f:f2:ff:f8
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Enjoy your pie!&lt;br /&gt;&lt;/p&gt;
 </description>
 <pubDate>
-Fri, 20 Jul 2012 00:00:00 +0300
+Fri, 20 Jul 2012 00:00:00 +1000
 </pubDate>
-<author>
-Ronen Narkis
-</author>
 </item>
 </channel>
 </rss>

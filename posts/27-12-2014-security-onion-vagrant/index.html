@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Narkisr.com</title>
+    <title>Narkisr.com: Security onion vagrant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" >
     <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"> -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
-        <link href="css/screen.css" rel="stylesheet" type="text/css" />
-	  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	  <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -35,7 +35,7 @@
 		    <!-- nav links -->
 		    <div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-			  <li  class="active" ><a href="/">Home</a></li>
+			  <li ><a href="/">Home</a></li>
 			  <li ><a href="/archives/">Archives</a></li>
 			  
 			  <li >
@@ -58,43 +58,74 @@
 			  
 <div id="post">
     <div id="post-header">
-    <h2>The balancing game</h2>
+    <h2>Security onion vagrant</h2>
     <div id="post-meta">
         
-        <div class="date">17 January 2018</div>
+        <div class="date">27 December 2014</div>
     </div>
 </div>
 <div>
     
-    <h3 id="intro">Intro</h3><p>Dependencies exists in multiple shapes and forms in our software, some are easy to detect while other are hidden and insidious.</p><p>Common to all dependencies is that they have a great effect on the systems we create, in this short post ill try to make you aware on why its crucial to manage them properly and the damage that poor management can cause.</p><h3 id="where&#95;can&#95;we&#95;find&#95;them?">Where can we find them?</h3><ul><li>In External libraries our code depend upon.</li><li>Services that our systems use (Databases, external API's etc..).</li><li>Operating system, packages its running, its kernel version etc..</li><li>The hardware we deploy on, the network setup.</li><li>People we depends upon like developers, clients, investors and of course users.</li></ul><p>There are many other places that dependencies creep from just stop and think about it for a second.</p><h3 id="good&#95;or&#95;bad?">Good or bad?</h3><p>Like most things in life it depends (pun intended), any dependency can turn into a liability in the future.</p><p>It can make your code harder to change, make OS upgrade harder or cause security issues, that said using the right dependency course reduce the amount of work you need to do increase reuse and security.</p><p>Managing dependencies is a balancing game and a delicate one at that, it takes experience and trial and error to learn which dependencies are good and which we better avoid.</p><h3 id="do's&#95;and&#95;don'ts">Do's and Don'ts</h3><ul><li>Map the dependencies you have and track them under an <a href='https://git-scm.com/'>SCM</a>.</li><li>Use dependency managers to manage them (create them if none exists).</li><li>Trim dependencies once in a while, they tend to accumulate and grow like a wild plant.</li><li>Keep dependencies up to date, postponing updates for too long can cause your system to stagnate (there are tools that track out of date dependencies).</li><li>Minimize dependency just for a single feature/method/api, sometimes its better to copy and paste a function (assuming its self isolated).</li><li>Don't over minimize and re-invent stuff if it exists already <a href='https://en.wikipedia.org/wiki/Not_invented_here'>NIH</a>.</li></ul><h2 id="summary">Summary</h2><p>Dependencies can really change the faith of a projects (and companies) once a dependency has set in it may be really hard to detach, be cautious and aware to both the challenge and reward that your dependencies present.</p><h4 id="footnotes:">Footnotes:</h4><ul><li><small><a href='https://github.com/xsc/lein-ancient'>Lein Ancient</a> and <a href='https://github.com/ben-manes/gradle-versions-plugin'>Gradle Versions</a> are tools to track and report old dependencies.</small></li><li><small> <a href='https://gradle.org/'>Gradle</a>, <a href='https://leiningen.org/'>Lein</a>, <a href='http://bundler.io/'>Bundler</a>, <a href='https://github.com/pypa/pipfile'>Pipefile</a> are good examples of code dependency management tools.</small></li><li><small> <a href='https://wiki.debian.org/Apt'>Apt</a>, <a href='https://fedoraproject.org/wiki/DNF?rd=Dnf'>DNF</a> and <a href='https://chocolatey.org/'>Chocolatey</a> manage packages on a variety of OSes.</small></li><li><small> Configuration management tools such as <a href='https://puppet.com/'>Puppet</a> and <a href='https://www.chef.io/solutions/infrastructure-automation/'>Chef</a> manage dependencies of deployed components.<small></li></ul>
+    <h3 id="intro">Intro</h3><p>Setting up <a href='http://en.wikipedia.org/wiki/Intrusion_detection_system'>IDS</a> systems such as <a href='https://www.snort.org/'>snort</a> has always been a tedious task, <a href='http://blog.securityonion.net/p/securityonion.html'>Security onion</a> (or SO for short) is a solution that aims to change that.</p><p>It includes not only snort but also <a href='http://www.ossec.net/'>ossec</a> (a HIDS system), <a href='https://code.google.com/p/enterprise-log-search-and-archive/'>ELSA</a> for central logging management, <a href='https://www.snorby.org/'>Snorby</a> a dashboard for IDS events. </p><p>SO publishes a <a href='https://launchpad.net/~securityonion/+archive/ubuntu/stable'>PPA</a> which is Ubuntu 12.04 compatible and distributes a livecd <a href='http://sourceforge.net/projects/security-onion/'>ISO</a> for setting it up on physical machines.</p><p>In this post ill go through on how to setup SO vagrant box, enabling us to do fast iterations and provisioning development.</p><h4 id="box&#95;setup">BOX setup</h4><p>The first step is creating the SO box itself using <a href='https://www.packer.io/'>packer</a>:</p><pre><code class="bash">$ git clone git://github.com/narkisr/packer-security-onion.git 
+# won't work on a headless machine
+$ make virtualbox/security-onion-12.04.4  
+</code></pre><p>The box itself is quite heavily customized due to the requirements of SO, once the box was created we import it like any other:</p><pre><code class="bash">$ vagrant box add security-onion-12.04.4&#95;puppet-3.7.3 box/virtualbox/security-onion-12.04.4&#95;puppet&#95;3.7.3.box
+</code></pre><p>Now we are ready to start rolling vagrant.</p><h4 id="vagrant">Vagrant</h4><p>Perquisites:</p><ul><li><a href='https://github.com/opskeleton/opskeleton'>Opskeleton</a> defines the project layout of the following Vagrant/Puppet code base so make sure to <a href='https://github.com/opskeleton/opskeleton#installation'>have</a>.</li><li>SO itself requires a running GUI (so no headless servers).</li><li>Have a mirror port ready on your switch connected to a physical interface (if you want to capture meaningful traffic), note that you can customize the mirror port vagrant uses (using VAGRANT_MIRROR).</li></ul><pre><code class="bash">$ git clone git://github.com/opskeleton/security-onion-sandbox.git
+# Wont work on a headless machine
+$ gem install bundle
+$ bundle install
+$ librarian-puppet install
+# in order to customize mirror port use VAGRANT&#95;MIRROR=ifc
+$ vagrant up
+</code></pre><p>Once the VM UI is running enter a terminal and start sosetup:</p><pre><code class="bash">$ sosetup
+</code></pre><p>On its first invocation the wizard will guide you through the network setup, choose eth0 as the management interface and eth1 as the monitor interface, reboot once done.</p><p>Once the machine is up run sosetup again to setup Sguil and Snorby u/p</p><pre><code class="bash">$ sosetup
+</code></pre><p>Once done you can either head on to <a href='https://localhost'>localhost</a> (from within the VM) or from the host use the forwarded ports <a href='https://localhost:8444'>snorby</a>.</p><h4 id="footnotes:">Footnotes:</h4><ul><li><small> Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. </small></li><li><small> openssh server didn't work well so the vagrant box is using dropbear instead.</small></li></ul>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/dependencies/">dependencies</a>
+    <a href="/security/">security</a>
     
-    <a href="/design/">design</a>
+    <a href="/opskeleton/">opskeleton</a>
     
-    <a href="/management/">management</a>
-    
-    <a href="/software/">software</a>
+    <a href="/vagrant/">vagrant</a>
     
 </div>
 
-    
-    <div id="comments">
-        <a href="/posts/17-01-2018-dependencies/#disqus_thread">View Comments</a>
-    </div>
-    
-
     <div id="prev-next">
         
+        <a href="/posts/16-04-2016-pi-crypt/">&laquo; PI crypt</a>
         
         
-        <a href="/posts/16-04-2016-pi-crypt/">PI crypt &raquo;</a>
+        ||
+        
+        
+        <a href="/posts/18-05-2013-node-cljs/">Nodifying Clojure &raquo;</a>
         
     </div>
+
+    
+    <div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+this.page.url = "http://narkisr.com/posts/27-12-2014-security-onion-vagrant/";
+this.page.identifier = "Security onion vagrant";
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//narkisrcom.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+    
+
+
 </div>
 
 			</div>
@@ -177,7 +208,7 @@
 		</div>
 		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-		<script src="js/highlight.pack.js" type="text/javascript"></script>
+		<script src="/js/highlight.pack.js" type="text/javascript"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
 	    </body>
 	  </html>

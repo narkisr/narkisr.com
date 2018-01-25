@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Narkisr.com: PI crypt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" >
+    <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"> -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+        <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			</button>
+			<h1><a class="navbar-brand" href="/">Narkisr.com</a></h1>
+		    </div>
+		    <ul class="nav navbar-nav navbar-right">
+			<li><a class="btn" href=/atom.xml ><i class="fa fa-rss"></i></a></li>
+			<li><a class="btn" href="http://twitter.com/narkisr" ><i class="fa fa-twitter"></i></a></li>
+			<li><a class="btn" href="https://github.com/narkisr" ><i class="fa fa-github-alt"></i></a></li>
+			<li><a class="btn" href="http://il.linkedin.com/in/narkisr/" ><i class="fa fa-linkedin"></i></a></li>
+
+		    </ul>
+		    <!-- nav links -->
+		    <div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+			  <li ><a href="/">Home</a></li>
+			  <li ><a href="/archives/">Archives</a></li>
+			  
+			  <li >
+			  <a href="/pages/about/">About</a>
+			  </li>
+			  
+			  <li >
+			  <a href="/pages/projects/">Projects</a>
+			  </li>
+			  
+			</ul>
+		    </div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+
+		<div id="wrapper" class="container">
+		  <div class="row">
+		    <div class="col-md-8">
+			<div id="content">
+			  
+<div id="post">
+    <div id="post-header">
+    <h2>PI crypt</h2>
+    <div id="post-meta">
+        
+        <div class="date">16 April 2016</div>
+    </div>
+</div>
+<div>
+    
+    <h3 id="intro">Intro</h3><p>Raspberry PI devices are on the rage now, they are cheap portable and run Linux, using such a device on a remote site (be it for remote backup or pentesting) requires you to keep sensitive data on remote sdcards/USB drives etc.</p><p>In this post ill cover how to setup root encrypted RPi.</p><h3 id="setup">Setup</h3><p>Iv used a lot of resources (see footnotes) and posts in order to get a working solution using Ubuntu 15.10 as the host and Raspbian <a href='https://www.raspberrypi.org/downloads/raspbian/'>Jessie lite</a> as the Pi OS image.</p><p>First we will setup the sdcard:</p><pre><code class="bash"># prepare the image
+$ wget https://downloads.raspberrypi.org/raspbian&#95;lite&#95;latest
+$ unzip raspbian&#95;lite&#95;latest
+# we assume the sdcard 
+$ dd if=2016-03-18-raspbian-jessie-lite.img of=/dev/sdb bs=4M
+</code></pre><p>Entering the chroot:</p><pre><code class="bash">$ aptitude install qemu-user-static
+# chrooting mostly same as in kali
+$ mkdir -p /mnt/chroot/boot
+$ mount /dev/sdb2 /mnt/chroot/
+$ mount /dev/sdb1 /mnt/chroot/boot/
+$ mount -t proc none /mnt/chroot/proc
+$ mount -t sysfs none /mnt/chroot/sys
+$ mount -o bind /dev /mnt/chroot/dev
+$ mount -o bind /dev/pts /mnt/chroot/dev/pts
+$ cp /usr/bin/qemu-arm-static /mnt/chroot/usr/bin/
+# And we are home
+$ LANG=C chroot /mnt/chroot/
+$ uname -a
+ Linux foo 4.2.0-25-generic #30-Ubuntu SMP Mon Jan 18 12:31:50 UTC 2016 armv7l GNU/Linux
+</code></pre><p>Setting up initramf (yes your are running arm binaries on your x86 machine):</p><pre><code class="bash"># Comment out the single line in this file &#40;or else apt-get wont work&#41;
+$ vi /etc/ld.so.preload
+$ apt-get update
+$ apt-get install busybox cryptsetup dropbear -y
+</code></pre><p>Our first mkinitramfs (the small dropbear that will load prior to the OS):</p><pre><code class="bash"># find the kernel version for initramfs
+$ ls -l /lib/modules/ |awk -F&quot; &quot; '{print $9}'
+4.1.19+
+4.1.19-v7+
+
+# You can ignore the 'Unsupported ioctl: cmd=0x5331' at the end
+$ mkinitramfs -o /boot/initramfs.gz 4.1.19-v7+
+$ update-rc.d ssh enable
+# set the root password for the init image
+$ passwd
+# Now edit and change/add root=/dev/mapper/crypt&#95;sdcard cryptdevice=/dev/mmcblk0p2:crypt&#95;sdcard 
+$ vi /boot/cmdline.txt
+# add 'initramfs initramfs.gz 0x00f00000'
+$ vi /boot/config.txt
+</code></pre><p>Copy the private ssh key that will enabled you to ssh to the dropbear instance (in which you enter the decryption password):</p><pre><code class="bash">$ cat /etc/initramfs-tools/root/.ssh/id&#95;rsa
+</code></pre><p>At this point we will load modules (bypassing 'debian /sbin/cryptsetup: not found raspbian') and change the fstab to point to crypt_sdcard and:</p><pre><code class="bash">$ cat /etc/fstab
+proc /proc proc defaults 0 0
+/dev/mmcblk0p1 /boot vfat defaults 0 2
+/dev/mapper/crypt&#95;sdcard / ext4 defaults,noatime 0 1
+
+# make sure to load the initramfs modules 
+$ cat /usr/share/initramfs-tools/modules
+aes
+chainiv
+cryptomgr 
+krng
+sha256
+sha224
+sha512
+sha1
+xts
+cbc
+ecb
+ctr
+dm-crypt
+dm-mod
+# And yet again
+$ cat /etc/initramfs-tools/modules
+aes
+chainiv
+cryptomgr 
+krng
+sha256
+sha224
+sha512
+sha1
+xts
+cbc
+ecb
+ctr
+dm-crypt
+dm-mod
+# append the following to /usr/share/initramfs-tools/hooks/cryptroot &#40;after the askpass copy&#95;exec&#41;:
+$ cat /usr/share/initramfs-tools/hooks/cryptroot | grep /sbin/cryptsetup -A 5
+copy&#95;exec /sbin/cryptsetup
+copy&#95;exec /sbin/dmsetup
+copy&#95;exec /lib/cryptsetup/askpass
+# new section
+for mod in aes chainiv cryptomgr krng sha256 sha224 sha512 sha1 xts cbc ecb ctr dm-crypt dm-mod; do
+ add&#95;crypto&#95;modules $mod
+done
+
+# ignore the cryptsetup errors since we don't have encryption set yet
+$ mkinitramfs -o /boot/initramfs.gz 4.1.19-v7+
+
+</code></pre><p>We will un-chroot and copy our work aside so we can copy it back once the drive is encrypted:</p><pre><code class="bash">$ exit
+$ umount /mnt/chroot/boot
+$ umount /mnt/chroot/sys
+$ umount /mnt/chroot/proc
+# Backup our work thus far
+$ mkdir -p /mnt/backup
+$ rsync -avh /mnt/chroot/&#42; /mnt/backup/
+# finalize the un-chrooting
+$ umount /mnt/chroot/dev/pts
+$ umount /mnt/chroot/dev
+$ umount /mnt/chroot
+</code></pre><p>We will move to setting up the encrypted drive</p><pre><code class="bash">$ echo -e &quot;d\n2\nw&quot; | fdisk /dev/sdb
+# note the use of 131072 which is where sdb1 ends for this specific image
+$ echo -e &quot;n\np\n2\n131072\n\nw&quot; | fdisk /dev/sdb
+</code></pre><p>Extrac the SDcard (so the new partitioning scheme will be detected) and move to encrypting the new partition:</p><pre><code class="bash">$ cryptsetup -v -y --cipher aes-cbc-essiv:sha256 --key-size 256 luksFormat /dev/sdb2
+$ cryptsetup -v luksOpen /dev/sdb2 crypt&#95;sdcard
+$ mkfs.ext4 /dev/mapper/crypt&#95;sdcard
+</code></pre><p>We can now restore our backup into the new encrypted partition:</p><pre><code class="bash">$ mkdir -p /mnt/encrypted
+$ mount /dev/mapper/crypt&#95;sdcard /mnt/encrypted/
+$ rsync -avh /mnt/backup/&#42; /mnt/encrypted/
+$ umount /mnt/encrypted/
+$ rm -rf /mnt/backup
+$ sync
+$ cryptsetup luksClose /dev/mapper/crypt&#95;sdcard
+</code></pre><p>You can now insert the SDcard into the PI and carry on to logging in.</p><h3 id="login">Login</h3><p>The login process is now composed of two steps, first logging into the dropbear session and decrypt the drive, the second is the usual ssh login:</p><pre><code class="bash"># find the IP by viewing the pi load screen
+$ ssh -i private root@&lt;ip&gt;
+# Enter your key
+$ /scripts/local-top/cryptroot
+# trigger the boot process
+$ kill -9 `ps | grep -m 1 'cryptroot' | cut -d ' ' -f 3`
+# once the pi loads you should be able to login as usual
+$ ssh pi@&lt;ip&gt;
+</code></pre><h2 id="summary">Summary</h2><p>The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guide is a starting point for a more automated approach.</p><h4 id="footnotes:">Footnotes:</h4><ul><li><small> The original tutorial for <a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'>Kali</a> Linux which gives a good outline (doesn't work as is on Raspbian tough).</small></li><li><small> A <a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'>post</a> which mainly helped me to solve 'qemu: uncaught target signal 4' error. </small></li><li><small> A <a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&t=130268'>post</a> that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors </small></li></ul>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/security/">security</a>
+    
+    <a href="/raspberry/">raspberry</a>
+    
+    <a href="/encryption/">encryption</a>
+    
+    <a href="/pi/">pi</a>
+    
+</div>
+
+    <div id="prev-next">
+        
+        <a href="/posts/17-01-2018-dependencies/">&laquo; The balancing game</a>
+        
+        
+        ||
+        
+        
+        <a href="/posts/27-12-2014-security-onion-vagrant/">Security onion vagrant &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+this.page.url = "http://narkisr.com/posts/16-04-2016-pi-crypt/";
+this.page.identifier = "PI crypt";
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//narkisrcom.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+    
+
+
+</div>
+
+			</div>
+		    </div>
+
+		    <div class="col-md-3">
+			<div id="sidebar">
+			  <ul id="links">
+
+			    
+			  </ul>
+			  <div id="recent">
+			    <h3>Recent Posts</h3>
+			    <ul>
+				
+				<li><a href="/posts/17-01-2018-dependencies/">The balancing game</a></li>
+				
+				<li><a href="/posts/16-04-2016-pi-crypt/">PI crypt</a></li>
+				
+				<li><a href="/posts/27-12-2014-security-onion-vagrant/">Security onion vagrant</a></li>
+				
+			    </ul>
+			  </div>
+			  <div id="tags">
+			    <h3>Tags</h3>
+			    <ul>
+				
+				<li><a href="/js/">js</a></li>
+				
+				<li><a href="/security/">security</a></li>
+				
+				<li><a href="/dependencies/">dependencies</a></li>
+				
+				<li><a href="/raspberry/">raspberry</a></li>
+				
+				<li><a href="/encryption/">encryption</a></li>
+				
+				<li><a href="/cyanogenmod/">cyanogenmod</a></li>
+				
+				<li><a href="/wifi/">wifi</a></li>
+				
+				<li><a href="/design/">design</a></li>
+				
+				<li><a href="/asus/">asus</a></li>
+				
+				<li><a href="/opskeleton/">opskeleton</a></li>
+				
+				<li><a href="/tf101/">tf101</a></li>
+				
+				<li><a href="/management/">management</a></li>
+				
+				<li><a href="/software/">software</a></li>
+				
+				<li><a href="/linux/">linux</a></li>
+				
+				<li><a href="/pi/">pi</a></li>
+				
+				<li><a href="/Clojure/">Clojure</a></li>
+				
+				<li><a href="/vagrant/">vagrant</a></li>
+				
+				<li><a href="/concurrency/">concurrency</a></li>
+				
+				<li><a href="/future/">future</a></li>
+				
+				<li><a href="/android/">android</a></li>
+				
+				<li><a href="/raspberry-pi/">raspberry-pi</a></li>
+				
+				<li><a href="/nodejs/">nodejs</a></li>
+				
+			    </ul>
+			  </div>
+			</div>
+		    </div>
+		  </div>
+		  <footer class="footer"><div class="span-24 small quite last">
+			<span href="http://purl.org/dc/dcmitype/Text" property="dc:title" rel="dc:type" xmlns:dc="http://purl.org/dc/elements/1.1/"> This website content</span> by <a href="narkisr.com" property="cc:attributionName" rel="cc:attributionURL" xmlns:cc="http://creativecommons.org/ns#"> Ronen Narkis </a> is licensed under a <a href="http://creativecommons.org/licenses/by/2.5/il/" rel="license">Creative Commons Attribution 2.5 Israel License</a>, based on a work at <a href="narkisr.com" rel="dc:source" xmlns:dc="http://purl.org/dc/elements/1.1/">narkisr.com</a>, Permissions beyond the scope of this license may be available at <a href="narkisr.com" rel="cc:morePermissions" xmlns:cc="http://creativecommons.org/ns#">narkisr.com</a>.</div>
+		  </footer>
+		</div>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+		<script src="/js/highlight.pack.js" type="text/javascript"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+	    </body>
+	  </html>
+

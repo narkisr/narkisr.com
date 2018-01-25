@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Narkisr.com: Raspberry foo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" >
+    <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"> -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+        <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	  <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			</button>
+			<h1><a class="navbar-brand" href="/">Narkisr.com</a></h1>
+		    </div>
+		    <ul class="nav navbar-nav navbar-right">
+			<li><a class="btn" href=/atom.xml ><i class="fa fa-rss"></i></a></li>
+			<li><a class="btn" href="http://twitter.com/narkisr" ><i class="fa fa-twitter"></i></a></li>
+			<li><a class="btn" href="https://github.com/narkisr" ><i class="fa fa-github-alt"></i></a></li>
+			<li><a class="btn" href="http://il.linkedin.com/in/narkisr/" ><i class="fa fa-linkedin"></i></a></li>
+
+		    </ul>
+		    <!-- nav links -->
+		    <div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+			  <li ><a href="/">Home</a></li>
+			  <li ><a href="/archives/">Archives</a></li>
+			  
+			  <li >
+			  <a href="/pages/about/">About</a>
+			  </li>
+			  
+			  <li >
+			  <a href="/pages/projects/">Projects</a>
+			  </li>
+			  
+			</ul>
+		    </div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+
+		<div id="wrapper" class="container">
+		  <div class="row">
+		    <div class="col-md-8">
+			<div id="content">
+			  
+<div id="post">
+    <div id="post-header">
+    <h2>Raspberry foo</h2>
+    <div id="post-meta">
+        
+        <div class="date">20 July 2012</div>
+    </div>
+</div>
+<div>
+    <ol class="content"><li><a href="#in_this_post_will_cover">In this post will cover</a></li><li><a href="#downloading_and_dding">Downloading and dding</a></li><li><a href="#sshing">SSHing</a></li><li><a href="#wifi">Wifi</a></li></ol>
+    <p>Iv been lucky to get my hands on a raspberry pie, from the get go it was clear that this device isn't ready for the faint hearted, while there is abundant content around for how to start going the pi is a moving target and things change quickly, this post is a quick start for getting pie going. </p><h5 id="in&#95;this&#95;post&#95;will&#95;cover">In this post will cover</h5><ul><li>Downloading sdcard image and \"dd'ing\"</li><li>Enabling SSH and updating Pi's frimware.</li><li>Enabling wifi with the 8192cu chipset:p</li></ul><h5 id="downloading&#95;and&#95;dding">Downloading and dding</h5><p>The pi site offers both Arch and Debian  <a href='http://www.raspberrypi.org/downloads'>images</a> , iv went ahead with Debian mainly since its closer to Ubuntu, note that there are  [beta] (http://rpi-developers.com/frs/download.php/file/20)  " versions out there but iv found the stock one working best.".</p><pre><code class="bash"> $ sudo dd bs=1M if=debian6-19-04-2012.img of=/dev/sdb
+</code></pre><p>When its done push the sdcard into its slot, make sure to connect the screen before powering up (iv had issue with connecting DVI cable once it was running),<br /> as the boot is done connect it to the internet and run all the updates (note sudo password is raspberry by default, change it afterwards).</p><pre><code class="bash">$ sudo aptitude update
+$ sudo aptitude upgrade
+</code></pre><h5 id="sshing">SSHing</h5><p>Its time to get our monitor back, we will enable SSH so we can work remotely:<br /></p><pre><code class="bash"># boot enable
+$ sudo update-rc.d ssh
+
+# ssh won't start without this
+$ ssh-keygem -b 1024 -t rsa -f /etc/ssh/ssh&#95;host&#95;key 
+$ ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh&#95;host&#95;rsa&#95;key 
+$ ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh&#95;host&#95;dsa&#95;key 
+
+# enable firewall
+$ sudo aptitude install ufw
+$ sudo ufw allow 22 
+</code></pre><p>Now will update Pi's frimware:<pre><code class="bash"># updating frimware
+$ sudo wget --no-check-certificate http://goo.gl/1BOfJ -O /usr/bin/rpi-update 
+$ sudo chmod +x /usr/bin/rpi-update
+$ sudo apt-get install git-core
+# avoiding http://tinyurl.com/cbauu4w  
+$ sudo ldconfig
+$ sudo rpi-update  
+</code></pre></p><h5 id="wifi">Wifi</h5><p>The hardest part in setting up the pi is enabling wireless, this boils down to two main reasons, power consumption and driver compatibility (kernel version wise).  The pi is powered by a 5v power supply (usb phone charger), this means that it has little power to spare for devices connected to its usb ports, high power long range wifi dongle require too much juice. </p><p>Among the low bandwidth cost adapters that iv found the  <a href='http://www.amazon.co.uk/Edimax-EW-7811UN-Wireless-802-11b-150Mbps/dp/B003MTTJOY'>EW-7811UN</a>  draws very little power, in addition it has a very low profile making it barely visible on the pi board, now comes the fun part of making it work.</p><p>The info of how setting it up is scattered and inconsistent, the best source out there for setting it up is this forum  <a href='http://www.raspberrypi.org/phpBB3/viewtopic.php?t=6256'>post</a>   by MrEngman , the post provides a  <a href='http://dl.dropbox.com/u/80256631/install-rtl8188cus.sh'>shell script</a>  and  <a href='' title=http://dl.dropbox.com/u/80256631/install-rtl8188cus.txt>instructions</a>  on how to use it,  under compatibility section you can see which driver version matches a kernel version</p><pre><code class="bash">$ uname -a 
+Linux raspberrypi 3.1.9+ #171 PREEMPT Tue Jul 17 01:08:22 BST 2012 armv6l GNU/Linux
+
+# The matching driver version 
+rtl8188cus driver versions and compatible Linux versions
+-------------------------------------------------------- 
+
+Driver tar file: 8192cu-20120701.tar.gz &#40;http://dl.dropbox.com/u/80256631/8192cu-20120701.tar.gz&#41;
+For kernel versions:
+
+Linux raspberrypi 3.1.9+ #171 PREEMPT Tue Jul 17 01:08:22 BST 2012 armv6l GNU/Linux 
+</code></pre><p>Run the installation script:</p><pre><code class="bash">$ sudo ./install-rtl8188cus.sh  
+</code></pre><p>Lets inspect the results:</p><pre><code class="bash">
+# the 8192cu driver is in place
+$ sudo ls /lib/modules/3.1.9+/kernel/net/wireless
+8192cu.ko  cfg80211.ko	lib80211.ko  lib80211&#95;crypt&#95;ccmp.ko  lib80211&#95;crypt&#95;tkip.ko  lib80211&#95;crypt&#95;wep.ko
+
+$ sudo cat /etc/network/interfaces | grep wlan0 -A 5 
+allow-hotplug wlan0
+
+auto wlan0
+
+iface wlan0 inet dhcp
+wpa-ssid &quot;ssid&quot;
+wpa-psk &quot;pass&quot;
+
+$ ifconfig | grep wlan
+wlan0     Link encap:Ethernet  HWaddr 00:1f:1f:f2:ff:f8
+</code></pre><p>Enjoy your pie!<br /></p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/wifi/">wifi</a>
+    
+    <a href="/linux/">linux</a>
+    
+    <a href="/raspberry-pi/">raspberry-pi</a>
+    
+</div>
+
+    <div id="prev-next">
+        
+        <a href="/posts/24-07-2012-waiting-for/">&laquo; Waiting for your future</a>
+        
+        
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+this.page.url = "http://narkisr.com/posts/20-07-2012-raspberri-pi/";
+this.page.identifier = "Raspberry foo";
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//narkisrcom.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+    
+
+
+</div>
+
+			</div>
+		    </div>
+
+		    <div class="col-md-3">
+			<div id="sidebar">
+			  <ul id="links">
+
+			    
+			  </ul>
+			  <div id="recent">
+			    <h3>Recent Posts</h3>
+			    <ul>
+				
+				<li><a href="/posts/17-01-2018-dependencies/">The balancing game</a></li>
+				
+				<li><a href="/posts/16-04-2016-pi-crypt/">PI crypt</a></li>
+				
+				<li><a href="/posts/27-12-2014-security-onion-vagrant/">Security onion vagrant</a></li>
+				
+			    </ul>
+			  </div>
+			  <div id="tags">
+			    <h3>Tags</h3>
+			    <ul>
+				
+				<li><a href="/js/">js</a></li>
+				
+				<li><a href="/security/">security</a></li>
+				
+				<li><a href="/dependencies/">dependencies</a></li>
+				
+				<li><a href="/raspberry/">raspberry</a></li>
+				
+				<li><a href="/encryption/">encryption</a></li>
+				
+				<li><a href="/cyanogenmod/">cyanogenmod</a></li>
+				
+				<li><a href="/wifi/">wifi</a></li>
+				
+				<li><a href="/design/">design</a></li>
+				
+				<li><a href="/asus/">asus</a></li>
+				
+				<li><a href="/opskeleton/">opskeleton</a></li>
+				
+				<li><a href="/tf101/">tf101</a></li>
+				
+				<li><a href="/management/">management</a></li>
+				
+				<li><a href="/software/">software</a></li>
+				
+				<li><a href="/linux/">linux</a></li>
+				
+				<li><a href="/pi/">pi</a></li>
+				
+				<li><a href="/Clojure/">Clojure</a></li>
+				
+				<li><a href="/vagrant/">vagrant</a></li>
+				
+				<li><a href="/concurrency/">concurrency</a></li>
+				
+				<li><a href="/future/">future</a></li>
+				
+				<li><a href="/android/">android</a></li>
+				
+				<li><a href="/raspberry-pi/">raspberry-pi</a></li>
+				
+				<li><a href="/nodejs/">nodejs</a></li>
+				
+			    </ul>
+			  </div>
+			</div>
+		    </div>
+		  </div>
+		  <footer class="footer"><div class="span-24 small quite last">
+			<span href="http://purl.org/dc/dcmitype/Text" property="dc:title" rel="dc:type" xmlns:dc="http://purl.org/dc/elements/1.1/"> This website content</span> by <a href="narkisr.com" property="cc:attributionName" rel="cc:attributionURL" xmlns:cc="http://creativecommons.org/ns#"> Ronen Narkis </a> is licensed under a <a href="http://creativecommons.org/licenses/by/2.5/il/" rel="license">Creative Commons Attribution 2.5 Israel License</a>, based on a work at <a href="narkisr.com" rel="dc:source" xmlns:dc="http://purl.org/dc/elements/1.1/">narkisr.com</a>, Permissions beyond the scope of this license may be available at <a href="narkisr.com" rel="cc:morePermissions" xmlns:cc="http://creativecommons.org/ns#">narkisr.com</a>.</div>
+		  </footer>
+		</div>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+		<script src="/js/highlight.pack.js" type="text/javascript"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+	    </body>
+	  </html>
+
