@@ -4,7 +4,7 @@
  :navbar? true}
 
 
-The following list some notable projects, my work ranges any where from [libraries](https://github.com/narkisr/substantiation), [puppet](https://github.com/orgs/pulling-strings/dashboard)  modules, tools [Octo](https://github.com/narkisr/octo) and [presentations](https://github.com/re-ops/re-tro) I gave.
+The following list some notable projects, my work ranges from [libraries](https://github.com/narkisr/substantiation) to [puppet](https://github.com/orgs/pulling-strings/dashboard)  modules and [tools](https://github.com/narkisr/octo).
 
 Check  my [Github](https://github.com/narkisr) page for more info.
 
