@@ -4,15 +4,18 @@
  :navbar? true}
 
 
- The following lists my current active projects, there are more projects listed under my  [github ](https://github.com/narkisr) page, ranging from  [puppet](http://puppetlabs.com/)  modules,  [dot-files](https://github.com/narkisr/.vim) and the projects as listed bellow , feel free to  [tweet](http://twitter.com/narkisr) me about any of these.
+The following list some notable projects, my work ranges any where from [libraries](https://github.com/narkisr/substantiation), [puppet](https://github.com/orgs/pulling-strings/dashboard)  modules, tools [Octo](https://github.com/narkisr/octo) and [presentations](https://github.com/re-ops/re-tro) I gave.
+
+Check  my [Github](https://github.com/narkisr) page for more info.
 
  <div class="row">
+   <div class="col-md-4"><h3>Re-mote</h3> <p> A live environment for executing functions over SSH and ZeroMQ on a cluster of machines enabling metric collection, remote orchestration with a rapid development cycle and increased flexibility over existing tools <a href="https://github.com/re-ops/re-mote">see</a> for more info.</p></div> 
 
-   <div class="col-md-4"><h3>Couchfuse</h3><p>Coucfuse is a FUSE file system implementation for the Couchdb nosql database, it enables the mount of a database and manipulation of documents, each document is mapped into a content and meta folders, <a href="http://narkisr.github.com/couch-fuse/">see</a> for more info.</p></div>
-
-   <div class="col-md-4"><h3>Gelfino</h3><p>A small embedded logging server which implements <a href="http://graylog2.org/">Graylog2</a> <a href="http://www.graylog2.org/about/gelf">GELF</a> protocol, Gelfino offers a concise DSL for processing log streams and for defining <a href="http://www.jboss.org/drools/drools-fusion.html" rel="noreferrer">Drools fusion</a> <a href="http://en.wikipedia.org/wiki/Complex_event_processing" rel="noreferrer">CEP</a> rules, for more info head on to project's <a href="https://github.com/narkisr/gelfino">website</a> or view this <a href="https://vimeo.com/40190962">screencast</a>.</p></div>
-
-  <div class="col-md-4"><h3>Gradle Liquibase plugin</h3><p>This <a href="http://www.gradle.org/">Gradle</a> plugin offers a complete life cycle management of database schema, it follows the same philosophy as any other source based project by providing development, packaging and deployment phases, it uses the excellent <a href="http://www.liquibase.org/" rel="noreferrer">Liquibase</a> for all the heavy database refactoring functionality, development was sponsored by <a href="http://www.kenshoo.com/" rel="noreferrer">Kenshoo</a> follow <a href="https://github.com/kenshoo/gradle-liquibase-plugin">this</a> for more information.</p></div>
+   <div class="col-md-4">
+   <h3>Re-core</h3>
+   <p> A live environment for managing systems across multiple providers, systems are persisted into ES and managed by using functional pipelines <a href="https://github.com/re-ops/re-core">see</a>
+   for more info.</p>
+   </div>
 
   <div class="col-md-4">
   <h3>Opskeleton</h3>
@@ -22,4 +25,12 @@
   </p>
  </div>
 
+   <div class="col-md-4">
+   <h3>Octo</h3>
+   <p> A Github backup tool that enables backing up repositories in an encrypted form into S3 <a href="https://github.com/narkisr/octo">see</a>
+   for more info.</p>
+   </div>
+
+
  </div>
+
