@@ -10,7 +10,7 @@ Common to all dependencies is that they have a great effect on the systems we cr
 
 ### Where can we find them?
 
-* In External libraries our code depend upon.
+* In external libraries our code depends upon.
 * Services that our systems use (Databases, external API's etc..).
 * Operating system, packages its running, its kernel version etc..
 * The hardware we deploy on, the network setup.
@@ -32,7 +32,7 @@ Managing dependencies is a balancing game and a delicate one at that, it takes e
 * Use dependency managers to manage them (create them if none exists).
 * Trim dependencies once in a while, they tend to accumulate and grow like a wild plant.
 * Keep dependencies up to date, postponing updates for too long can cause your system to stagnate (there are tools that track out of date dependencies).
-* Minimize dependency just for a single feature/method/api, sometimes its better to copy and paste a function (assuming its self isolated).
+* Minimize dependencies,  sometimes its better to copy and paste a single function (assuming its self isolated) than to include a entire library.
 * Don't over minimize and re-invent stuff if it exists already [NIH](https://en.wikipedia.org/wiki/Not_invented_here).
 
 ## Summary
