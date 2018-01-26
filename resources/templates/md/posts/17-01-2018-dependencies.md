@@ -22,9 +22,9 @@ There are many other places that dependencies creep from just stop and think abo
 
 Like most things in life it depends (pun intended), any dependency can turn into a liability in the future.
 
-It can make your code harder to change, make OS upgrade harder or cause security issues, that said using the right dependency course reduce the amount of work you need to do increase reuse and security.
+It can make your code harder to change, OS upgrades harder or cause security issues, that said using the right dependency can reduce the amount of work you need to do while increasing reuse and security.
 
-Managing dependencies is a balancing game and a delicate one at that, it takes experience and trial and error to learn which dependencies are good and which we better avoid.
+Managing dependencies is a balancing game and a delicate one at that, it takes experience and trial and error to learn which dependencies are good and which are better to avoid.
 
 ### Do's and Don'ts
 

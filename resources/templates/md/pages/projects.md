@@ -22,7 +22,9 @@ Check my [Github](https://github.com/narkisr) page for more info.
  The [Opskeleton](https://github.com/opskeleton) organization is the home for a growing list of provisioning projects ranging from [riemann](https://github.com/opskeleton/riemann-sandbox) to [ELK stack](https://github.com/opskeleton/elk-5) and list is just growing ..
   </p>
  </div>
+ </div>
 
+ <div class="row">
    <div class="col-md-4">
    <h3> <a href="https://github.com/narkisr/octo">Octo</a></h3>
    <p> A tool for backing up repositories in an encrypted form into S3 from central git repositories like Github and Gitblit, it offers an intuitive workflow (sync, push and pull)</p>

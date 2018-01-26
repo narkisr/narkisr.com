@@ -3,7 +3,7 @@
  :page-index 0
  :navbar? true}
 
-The following are presentations that I presented in conferences and companies, all are viewable online a simple we pages.
+The following are presentations that I presented in conferences and companies, all are viewable online as static web pages.
 
 Check my [Github](https://github.com/narkisr) page for more info.
 
