@@ -1,7 +1,7 @@
 {:title "About"
  :layout :page
  :page-index 0
- :navbar? true}
+ :navbar? false}
 
 Iv been a software for more than 12 years working on various projects ranging from Devops to Bigdata, Automation and Cloud infrastructure using a wide range of programming languages and tools.
 
