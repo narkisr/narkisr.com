@@ -1,4 +1,4 @@
-{:title "When types are eating away your sanity (types impedance mismatch)"
+{:title "When types are eating away your sanity"
  :layout :post
  :tags  ["impedance" "types" "software" "design"]
  :toc false}
