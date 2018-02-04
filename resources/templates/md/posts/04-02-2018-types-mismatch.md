@@ -79,9 +79,7 @@ In the words of Rich Hickey:
 
 >It got written. Yes. What's a more interesting fact about it? It passed the type checker.
 
-With all that in mind there are cases where checking structure the data between components make sense.
-
-Enter clojure.spec:
+With all that in mind there are cases in which verifying structure the data between components makes sense, enter clojure.spec:
 
 ```clojure
 (s/def ::name string?)
