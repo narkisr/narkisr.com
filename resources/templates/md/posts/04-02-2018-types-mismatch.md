@@ -132,7 +132,7 @@ Imagine this logic for n JSON documents in your system, it gets ugly pretty quic
 
 ## Summary
 
-When using types in the context of unstructured data be aware to the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in type conversion juggling not with the business logic itself.
+When using types in the context of unstructured data be aware to the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in juggling type conversion instead of focusing on the business logic itself.
 
 Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.
 
