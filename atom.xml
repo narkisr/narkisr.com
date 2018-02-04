@@ -12,11 +12,95 @@ http://narkisr.com/
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Fri, 26 Jan 2018 22:24:22 +1100
+Sun, 04 Feb 2018 15:37:23 +1100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://narkisr.com/posts/04-02-2018-types-mismatch/
+</guid>
+<link>
+http://narkisr.com/posts/04-02-2018-types-mismatch/
+</link>
+<title>
+When types are eating away your sanity (types impedance mismatch)
+</title>
+<description>
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;Iv been programming in Java for more than 15 years and in every project I kept seeing the same pattern:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;java&quot;&gt;public class PersonTo {
+  public String name;
+  public Integer age;
+}
+
+public class PersonModel {
+  public String name;
+  public Integer age;
+  public boolean isRegistered;
+}
+
+public class ServiceA {
+
+  public void personsService&amp;#40;String json&amp;#41;{
+   PersonTo person = parse&amp;#40;json&amp;#41;;
+   PersonModel model = process&amp;#40;person&amp;#41;;
+   persist&amp;#40;model&amp;#41;;
+  }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you lucky you have a set of conversion logic in place (iv seen a lot of duplicated code that ignores the issue and just copy and past the same logic):&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;java&quot;&gt;public class PersonToConvertor&amp;lt;PersonModel&amp;gt; {
+   public PersonModel convert&amp;#40;PersonTo person&amp;#41; {
+    //.. the pleasure of conversion logic
+    return personModel;
+   }
+}
+public class PersonModelConvertor&amp;lt;PersonTo&amp;gt; {
+   public PersonTo convert&amp;#40;PersonModel person&amp;#41; {
+    //.. the pleasure of conversion logic
+    return personTo;
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We have a simple json -&gt; PersonTo -&gt; PersonModel conversion chain, why we have those conversions? because each part of the system expect to get the data in a certain shape and form and because its better OOP modeling.&lt;/p&gt;&lt;p&gt;Still this is a simple example and you can imagine the piles and piles of code that deals with this issue, it does not matter if your programming in Java/Haskell/Go/Elm at the end of the day slurping data into your system will cost you.&lt;/p&gt;&lt;p&gt;Not only that but if the data types/structure changes you may find yourself in a huge refactoring and moving/shaking a lot of types/methods/functions around (a ripple effect).&lt;/p&gt;&lt;p&gt;But wait, is there an alternative?&lt;/p&gt;&lt;h3 id=&quot;bringing&amp;#95;back&amp;#95;sanity&quot;&gt;Bringing back sanity&lt;/h3&gt;&lt;p&gt;As a matter of a fact there is, almost any functional dynamic language does not require such wacky conversions, we can just work on the raw data:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn service-a &amp;#91;json&amp;#93;
+    &amp;#40;-&amp;gt; json parse process persist&amp;#41;&amp;#41;
+
+; once parsed the person is a simple hashmap datastructure that we manipulate
+&amp;#40;defn process &amp;#91;person&amp;#93;
+   &amp;#40;assoc person :is-registered false&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Oh wait, that is too simple your cheating!, what about type checking your code? making sure that its correct and all.&lt;/p&gt;&lt;p&gt;In the words of Rich Hickey:&lt;/p&gt;&lt;blockquote&gt;&lt;p&gt;And I like to ask this question: What's true of every bug found in the field? &lt;/p&gt;&lt;/blockquote&gt;&lt;blockquote&gt;&lt;p&gt;Audience reply: Someone wrote it? Audience reply: It got written. &lt;/p&gt;&lt;/blockquote&gt;&lt;blockquote&gt;&lt;p&gt;It got written. Yes. What's a more interesting fact about it? It passed the type checker. &lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;With all that in mind there are cases where checking structure the data between components make sense.&lt;/p&gt;&lt;p&gt;Enter clojure.spec:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;s/def ::name string?&amp;#41;
+&amp;#40;s/def ::age integer?&amp;#41;
+
+&amp;#40;s/def ::person &amp;#40;s/keys :req &amp;#91;::name ::age&amp;#93;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This allows us to check the validity in run time and check that different parts of the system conform to the specifications of others.&lt;/p&gt;&lt;h3 id=&quot;we&amp;#95;have&amp;#95;magic&amp;#95;x&amp;#95;that&amp;#95;converts&amp;#95;our&amp;#95;types!&quot;&gt;We have magic X that converts our types!&lt;/h3&gt;&lt;p&gt;There are &quot;shorter&quot; ways of converting types, such as:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Code generation, we generate our types from a schema and don't write them, still you have code which isn't generate (the logic right?) and its bound to those multiple types increasing the maintenance cost, in addition you maintain a whole set of tools and schema so its not free.&lt;/li&gt;&lt;li&gt;Automated mapping libraries, similar to code generation you still have to maintain a huge set mapping between the types also the types themself don't go away you still have multiple types describing the same entity.&lt;/li&gt;&lt;li&gt;We work on the raw parsed data matching on the JSON:&lt;/li&gt;&lt;/ol&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;class CC&amp;#91;T&amp;#93; {
+  def unapply&amp;#40;a:Option&amp;#91;Any&amp;#93;&amp;#41;:Option&amp;#91;T&amp;#93; = if &amp;#40;a.isEmpty&amp;#41; {
+    None
+  } else {
+    Some&amp;#40;a.get.asInstanceOf&amp;#91;T&amp;#93;&amp;#41;
+  }
+}
+
+object M extends CC&amp;#91;Map&amp;#91;String, Any&amp;#93;&amp;#93;
+object L extends CC&amp;#91;List&amp;#91;Any&amp;#93;&amp;#93;
+object S extends CC&amp;#91;String&amp;#93;
+object D extends CC&amp;#91;Double&amp;#93;
+object B extends CC&amp;#91;Boolean&amp;#93;
+
+for {
+  M&amp;#40;map&amp;#41; &amp;lt;- List&amp;#40;JSON.parseFull&amp;#40;jsonString&amp;#41;&amp;#41;
+  L&amp;#40;languages&amp;#41; = map.get&amp;#40;&amp;quot;languages&amp;quot;&amp;#41;
+  language &amp;lt;- languages
+  M&amp;#40;lang&amp;#41; = Some&amp;#40;language&amp;#41;
+  S&amp;#40;name&amp;#41; = lang.get&amp;#40;&amp;quot;name&amp;quot;&amp;#41;
+  B&amp;#40;active&amp;#41; = lang.get&amp;#40;&amp;quot;is&amp;#95;active&amp;quot;&amp;#41;
+  D&amp;#40;completeness&amp;#41; = lang.get&amp;#40;&amp;quot;completeness&amp;quot;&amp;#41;
+} yield {
+  &amp;#40;name, active, completeness&amp;#41;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Imagine this logic for n JSON documents in your system, it gets ugly pretty quickly.&lt;/p&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;When using types and unstructured data be aware of the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in type conversion juggling not with the business logic itself.&lt;/p&gt;&lt;p&gt;Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='https://github.com/matthiasn/talk-transcripts/blob/master/Hickey_Rich/SimpleMadeEasy.md'&gt;Simple Made easy&lt;/a&gt;.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://dozer.sourceforge.net/'&gt;Dozer&lt;/a&gt; is an example for an &quot;automated&quot; bean to bean mapping framework.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; How to parse JSON in &lt;a href='https://stackoverflow.com/questions/4170949/how-to-parse-json-in-scala-using-standard-scala-classes'&gt;Scala&lt;/a&gt; using standard Scala classes?&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
+</description>
+<pubDate>
+Sun, 04 Feb 2018 00:00:00 +1100
+</pubDate>
+</item>
 <item>
 <guid>
 http://narkisr.com/posts/17-01-2018-dependencies/
