@@ -96,7 +96,7 @@ This allows us to check the validity in run time and check that different parts 
 
 There are "shorter" ways of converting types, such as:
 
-1. Code generation, we generate our types from a schema and don't write them, still you have code which isn't generate (the logic right?) and its bound to those multiple types increasing the maintenance cost, in addition you maintain a whole set of tools and schema so its not free.
+1. Code generation, we generate our types and convertors we don't write them manually, the business isn't generated and its bound to those multiple types increasing the maintenance cost, in addition you maintain a whole set of tools and schema so its not free.
 
 2. Automated mapping libraries, similar to code generation you still have to maintain a huge set mapping between the types also the types themself don't go away you still have multiple types describing the same entity.
 
@@ -134,7 +134,7 @@ Imagine this logic for n JSON documents in your system, it gets ugly pretty quic
 
 ## Summary
 
-When using types and unstructured data be aware of the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in type conversion juggling not with the business logic itself.
+When using types in the context of unstructured data be aware to the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in type conversion juggling not with the business logic itself.
 
 Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.
 
