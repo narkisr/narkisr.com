@@ -12,7 +12,7 @@ http://narkisr.com/
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Sun, 04 Feb 2018 15:37:23 +1100
+Sun, 04 Feb 2018 15:41:20 +1100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -25,7 +25,7 @@ http://narkisr.com/posts/04-02-2018-types-mismatch/
 http://narkisr.com/posts/04-02-2018-types-mismatch/
 </link>
 <title>
-When types are eating away your sanity (types impedance mismatch)
+When types are eating away your sanity
 </title>
 <description>
 &lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;Iv been programming in Java for more than 15 years and in every project I kept seeing the same pattern:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;java&quot;&gt;public class PersonTo {
