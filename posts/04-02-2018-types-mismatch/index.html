@@ -23,18 +23,9 @@
                     <span class="icon-bar"></span>
 			  <span class="icon-bar"></span>
 			</button>
-
 		    </div>
-		    <ul class="nav navbar-nav navbar-right">
-			<li><a class="btn" href=/atom.xml ><i class="fa fa-rss"></i></a></li>
-			<li><a class="btn" href="http://twitter.com/narkisr" ><i class="fa fa-twitter"></i></a></li>
-			<li><a class="btn" href="https://github.com/narkisr" ><i class="fa fa-github-alt"></i></a></li>
-			<li><a class="btn" href="http://il.linkedin.com/in/narkisr/" ><i class="fa fa-linkedin"></i></a></li>
-                  <li><a class="btn" href="/pages/about" >
-                    <img style='border-radius: 50%;'  src="/img/me-small.jpg" height="60%" width="60%"/></a>
-                  </li>
-		    </ul>
-		    <!-- nav links -->
+
+				    <!-- nav links -->
 		    <div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 			  <li ><a href="/">Home</a></li>
@@ -48,6 +39,14 @@
 			  <a href="/pages/presentations/">Presentations</a>
 			  </li>
 			  
+			  <ul class="nav navbar-nav navbar-right">
+			    <li><a class="btn" href=/atom.xml ><i class="fa fa-rss"></i></a></li>
+			    <li><a class="btn" href="http://twitter.com/narkisr" ><i class="fa fa-twitter"></i></a></li>
+			    <li><a class="btn" href="https://github.com/narkisr" ><i class="fa fa-github-alt"></i></a></li>
+			    <li><a class="btn" href="http://il.linkedin.com/in/narkisr/" ><i class="fa fa-linkedin"></i></a></li>
+			  </ul>
+
+
 			</ul>
 		    </div><!--/.nav-collapse -->
 		  </div>
@@ -106,11 +105,11 @@ public class PersonModelConvertor&lt;PersonTo&gt; {
 ; once parsed the person is a simple hashmap datastructure that we manipulate
 &#40;defn process &#91;person&#93;
    &#40;assoc person :is-registered false&#41;&#41;
-</code></pre><p>Oh wait, that is too simple your cheating!, what about type checking your code? making sure that its correct and all.</p><p>In the words of Rich Hickey:</p><blockquote><p>And I like to ask this question: What's true of every bug found in the field? </p></blockquote><blockquote><p>Audience reply: Someone wrote it? Audience reply: It got written. </p></blockquote><blockquote><p>It got written. Yes. What's a more interesting fact about it? It passed the type checker. </p></blockquote><p>With all that in mind there are cases where checking structure the data between components make sense.</p><p>Enter clojure.spec:</p><pre><code class="clojure">&#40;s/def ::name string?&#41;
+</code></pre><p>Oh wait, that is too simple your cheating!, what about type checking your code? making sure that its correct and all.</p><p>In the words of Rich Hickey:</p><blockquote><p>And I like to ask this question: What's true of every bug found in the field? </p></blockquote><blockquote><p>Audience reply: Someone wrote it? Audience reply: It got written. </p></blockquote><blockquote><p>It got written. Yes. What's a more interesting fact about it? It passed the type checker. </p></blockquote><p>With all that in mind there are cases in which verifying structure the data between components makes sense, enter clojure.spec:</p><pre><code class="clojure">&#40;s/def ::name string?&#41;
 &#40;s/def ::age integer?&#41;
 
 &#40;s/def ::person &#40;s/keys :req &#91;::name ::age&#93;
-</code></pre><p>This allows us to check the validity in run time and check that different parts of the system conform to the specifications of others.</p><h3 id="we&#95;have&#95;magic&#95;x&#95;that&#95;converts&#95;our&#95;types!">We have magic X that converts our types!</h3><p>There are "shorter" ways of converting types, such as:</p><ol><li>Code generation, we generate our types from a schema and don't write them, still you have code which isn't generate (the logic right?) and its bound to those multiple types increasing the maintenance cost, in addition you maintain a whole set of tools and schema so its not free.</li><li>Automated mapping libraries, similar to code generation you still have to maintain a huge set mapping between the types also the types themself don't go away you still have multiple types describing the same entity.</li><li>We work on the raw parsed data matching on the JSON:</li></ol><pre><code class="scala">class CC&#91;T&#93; {
+</code></pre><p>This allows us to check the validity in run time and check that different parts of the system conform to the specifications of others.</p><h3 id="we&#95;have&#95;magic&#95;x&#95;that&#95;converts&#95;our&#95;types!">We have magic X that converts our types!</h3><p>There are "shorter" ways of converting types, such as:</p><ol><li>Code generation, we generate our types and convertors we don't write them manually, the business isn't generated and its bound to those multiple types increasing the maintenance cost, in addition you maintain a whole set of tools and schema so its not free.</li><li>Automated mapping libraries, similar to code generation you still have to maintain a huge set mapping between the types also the types themself don't go away you still have multiple types describing the same entity.</li><li>We work on the raw parsed data matching on the JSON:</li></ol><pre><code class="scala">class CC&#91;T&#93; {
   def unapply&#40;a:Option&#91;Any&#93;&#41;:Option&#91;T&#93; = if &#40;a.isEmpty&#41; {
     None
   } else {
@@ -135,7 +134,7 @@ for {
 } yield {
   &#40;name, active, completeness&#41;
 }
-</code></pre><p>Imagine this logic for n JSON documents in your system, it gets ugly pretty quickly.</p><h2 id="summary">Summary</h2><p>When using types and unstructured data be aware of the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in type conversion juggling not with the business logic itself.</p><p>Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.</p><h4 id="footnotes:">Footnotes:</h4><ul><li><small><a href='https://github.com/matthiasn/talk-transcripts/blob/master/Hickey_Rich/SimpleMadeEasy.md'>Simple Made easy</a>.</small></li><li><small><a href='http://dozer.sourceforge.net/'>Dozer</a> is an example for an "automated" bean to bean mapping framework.</small></li><li><small> How to parse JSON in <a href='https://stackoverflow.com/questions/4170949/how-to-parse-json-in-scala-using-standard-scala-classes'>Scala</a> using standard Scala classes?</small></li></ul>
+</code></pre><p>Imagine this logic for n JSON documents in your system, it gets ugly pretty quickly.</p><h2 id="summary">Summary</h2><p>When using types in the context of unstructured data be aware to the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in juggling type conversion instead of focusing on the business logic itself.</p><p>Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.</p><h4 id="footnotes:">Footnotes:</h4><ul><li><small><a href='https://github.com/matthiasn/talk-transcripts/blob/master/Hickey_Rich/SimpleMadeEasy.md'>Simple Made easy</a>.</small></li><li><small><a href='http://dozer.sourceforge.net/'>Dozer</a> is an example for an "automated" bean to bean mapping framework.</small></li><li><small> How to parse JSON in <a href='https://stackoverflow.com/questions/4170949/how-to-parse-json-in-scala-using-standard-scala-classes'>Scala</a> using standard Scala classes?</small></li></ul>
 </div>
 
 <div id="post-tags">
@@ -153,6 +152,10 @@ for {
 
     <div id="prev-next">
         
+        <a href="/posts/20-02-2018-wacky/">&laquo; Speculative execution</a>
+        
+        
+        ||
         
         
         <a href="/posts/17-01-2018-dependencies/">The balancing game &raquo;</a>
@@ -197,11 +200,11 @@ s.setAttribute('data-timestamp', +new Date());
 			    <h3>Recent Posts</h3>
 			    <ul>
 				
+				<li><a href="/posts/20-02-2018-wacky/">Speculative execution</a></li>
+				
 				<li><a href="/posts/04-02-2018-types-mismatch/">When types are eating away your sanity</a></li>
 				
 				<li><a href="/posts/17-01-2018-dependencies/">The balancing game</a></li>
-				
-				<li><a href="/posts/16-04-2016-pi-crypt/">PI crypt</a></li>
 				
 			    </ul>
 			  </div>
@@ -241,13 +244,21 @@ s.setAttribute('data-timestamp', +new Date());
 				
 				<li><a href="/pi/">pi</a></li>
 				
+				<li><a href="/re-core/">re-core</a></li>
+				
 				<li><a href="/Clojure/">Clojure</a></li>
 				
 				<li><a href="/vagrant/">vagrant</a></li>
 				
 				<li><a href="/concurrency/">concurrency</a></li>
 				
+				<li><a href="/re-ops/">re-ops</a></li>
+				
+				<li><a href="/functional/">functional</a></li>
+				
 				<li><a href="/future/">future</a></li>
+				
+				<li><a href="/re-mote/">re-mote</a></li>
 				
 				<li><a href="/impedance/">impedance</a></li>
 				
@@ -256,6 +267,10 @@ s.setAttribute('data-timestamp', +new Date());
 				<li><a href="/raspberry-pi/">raspberry-pi</a></li>
 				
 				<li><a href="/nodejs/">nodejs</a></li>
+				
+				<li><a href="/flows/">flows</a></li>
+				
+				<li><a href="/operations/">operations</a></li>
 				
 			    </ul>
 			  </div>

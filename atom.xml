@@ -12,11 +12,97 @@ http://narkisr.com/
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Sun, 04 Feb 2018 15:41:20 +1100
+Wed, 21 Feb 2018 23:04:15 +1100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://narkisr.com/posts/20-02-2018-wacky/
+</guid>
+<link>
+http://narkisr.com/posts/20-02-2018-wacky/
+</link>
+<title>
+Speculative execution
+</title>
+<description>
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;One of the characteristics of good tools is that they allow creative exploration of ideas, in this post ill cover some speculative flows that Re-ops may support in the future.&lt;/p&gt;&lt;p&gt;The flows are not implemented but Re-ops makes them all possible due to its basic architecture and design.&lt;/p&gt;&lt;h2 id=&quot;voice&amp;#95;up&quot;&gt;Voice up&lt;/h2&gt;&lt;p&gt;There are a lot of cases where it makes sense to create/start a VM/Physical machine, lets take for example your media server, or a remote development machine, we need those only on specific times yet we usually run them 24/7, but what if we could trigger them based on our needs?&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn plex-on &amp;#91;&amp;#93;
+  &amp;#40;run &amp;#40;start&amp;#41; | &amp;#40;alexa :reply &amp;quot;ok&amp;quot;&amp;#41;&amp;#41;&amp;#41;
+
+&amp;#40;defn update-all &amp;#91;&amp;#93;
+  &amp;#40;run &amp;#40;update&amp;#41; | &amp;#40;alexa :reply &amp;quot;ok&amp;quot;&amp;#41;&amp;#41;
+
+; start VM instances by saying 'Alexa start plex on'
+&amp;#40;wemo &amp;#40;alexa :event &amp;quot;plex power on&amp;quot;&amp;#41; &amp;#40;plex-on&amp;#41;&amp;#41;
+
+; updating all the machine by saying 'Alexa update all'
+&amp;#40;wemo &amp;#40;alexa :event &amp;quot;update all&amp;quot;&amp;#41; &amp;#40;update-all&amp;#41;&amp;#41;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now this flow isn't implemented now, I suspect it should pretty easy to implement by exposing a WeMO like interface and pretending to be one or more devices.&lt;/p&gt;&lt;p&gt;Another good options (tough it will require a bit more setup) is to use MQTT, the main issue here is exposing the MQTT broker to Alexa.&lt;/p&gt;&lt;h2 id=&quot;sensors&quot;&gt;Sensors&lt;/h2&gt;&lt;p&gt;Another cool idea is to integrate Re-ops with sensors:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;; our closet instances &amp;#40;including the physical hypervisor big-iron&amp;#41;
+&amp;#40;def closet &amp;#40;Hosts. {} &amp;#91;&amp;quot;foo&amp;quot; &amp;quot;bar&amp;quot; &amp;quot;big-iron&amp;quot;&amp;#93;&amp;#41;&amp;#41;
+
+; Stopping our closet instances when it gets too hot &amp;#40;beyond 70c&amp;#41;
+&amp;#40;def check-temp &amp;#91;t&amp;#93;
+  &amp;#40;when &amp;#40;&amp;gt; t 70&amp;#41;
+    &amp;#40;run &amp;#40;stop hs&amp;#41; | &amp;#40;email to-from &amp;quot;stopped all closed instances, room too hot&amp;quot;&amp;#41;&amp;#41;
+
+&amp;#40;watch :temp once-an-hour &amp;#40;check-temp &amp;#40;sensor :temperture&amp;#41;&amp;#41;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here we would stop all the VM's and the hosts if our server room (aka our closet) gets too hot thus preventing hardware meltdown while we are not near, we would need to exposing an MQTT end point and the rest should be pretty easy to follow.&lt;/p&gt;&lt;p&gt;A more far out scenario is automating our machines based on sensor detecting power output from solar panels (is it sunny enough or not) if there isn't enough power draw we would rather not to use costly energy from the wall, our mining farm will start/stop based on the power costs:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;; our mining instances &amp;#40;including the hypervisor big-iron&amp;#41;
+&amp;#40;def mining-pool &amp;#40;Hosts. {} &amp;#91;&amp;quot;coin-1&amp;quot; &amp;quot;coin-1&amp;quot; &amp;quot;big-iron&amp;quot;&amp;#93;&amp;#41;&amp;#41;
+
+; We produce more then 10KW of power lets start mining
+&amp;#40;defn power-ok &amp;#91;&amp;#93;
+   &amp;#40;run &amp;#40;start mining-pool&amp;#41; | &amp;#40;pretty &amp;quot;pool resumed&amp;quot;&amp;#41;&amp;#41;
+
+; We produce less then 10KW of power lets stop mining
+&amp;#40;defn low-power &amp;#91;&amp;#93;
+  &amp;#40;run &amp;#40;stop mining-pool&amp;#41; | &amp;#40;pretty &amp;quot;pool stopped&amp;quot;&amp;#41;&amp;#41;
+
+&amp;#40;defn adjust-pool &amp;#91;&amp;#93;
+  &amp;#40;if &amp;#40;&amp;gt; &amp;#40;check-power&amp;#41; 10&amp;#41;&amp;#41;
+     &amp;#40;power-ok&amp;#41;
+     &amp;#40;low-power&amp;#41;&amp;#41;
+
+&amp;#40;watch :power-check once-an-hour adjust-pool&amp;#41;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;scanning&quot;&gt;Scanning&lt;/h2&gt;&lt;p&gt;Running a scanning tool on a regular basis is a good way for checking compliance and detect potential security issues:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;
+&amp;#40;def suspicious-ports #{25 ...}&amp;#41;
+&amp;#40;def scanner &amp;#40;Hosts. {} &amp;#91;&amp;quot;scanner&amp;quot;&amp;#93;&amp;#41;&amp;#41;
+
+&amp;#40;defn scan &amp;#91;&amp;#93;
+  &amp;#40;run &amp;#40;open-ports scanner&amp;#41; | &amp;#40;pick &amp;#40;fn &amp;#91;ports&amp;#93; &amp;#40;suspicious-ports ports&amp;#41;&amp;#41;&amp;#41; | &amp;#40;email &amp;quot;suspicious ports found&amp;quot;&amp;#41;&amp;#41;
+
+&amp;#40;watch :nmap &amp;#40;every-day 22&amp;#41; &amp;#40;scan hosts&amp;#41;&amp;#41;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Using the scanner from a dedicated host enables us to:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Selectively allow password-less sudo access instance for the specific VM.&lt;/li&gt;&lt;li&gt;Have scanning agents running within segmented networks, thus controlling which ports/networks are exposed.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&quot;spot&amp;#95;instances&quot;&gt;Spot instances&lt;/h2&gt;&lt;p&gt;In AWS we can bid for EC2 instances and offer a max price that we are willing to pay for them, for some workloads (like batch processing) this can be highly cost effective.&lt;/p&gt;&lt;p&gt;The main down side is that we do this bidding only within EC2, what if we could have a cost decision tree that makes a dynamic decision whether to use one provide or another:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;; some long batch job
+&amp;#40;def batch &amp;#40;Hosts. {} &amp;#91;&amp;quot;worker-1&amp;quot; &amp;quot;worker-2&amp;quot; &amp;quot;master&amp;quot;&amp;#93;&amp;#41;&amp;#41;
+
+; AWS cost per hour bellow $0.0058 per Hour
+&amp;#40;defn use-ec2 &amp;#91;&amp;#93;
+  &amp;#40;run &amp;#40;destroy batch&amp;#41; | &amp;#40;create batch aws-spot-instance&amp;#41;&amp;#41;&amp;#41;
+
+
+; AWS too expansive we will run locally
+&amp;#40;defn use-kvm &amp;#91;c&amp;#93;
+  &amp;#40;run &amp;#40;destroy batch&amp;#41; | &amp;#40;create batch kvm-medium&amp;#41;&amp;#41;&amp;#41;
+
+&amp;#40;defn pick &amp;#91;&amp;#93;
+   &amp;#40;if &amp;#40;&amp;lt; &amp;#40;cost :ec2-cost&amp;#41; 0.0058&amp;#41;
+     &amp;#40;use-ec2&amp;#41;
+     &amp;#40;use-kvm&amp;#41;&amp;#41;&amp;#41;
+
+; The cost changes will be collected once an hour so we won't flap too often.
+&amp;#40;watch :aws-spots once-an-hour pick&amp;#41;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;In this post we explored some of the more speculative (yet possible) flows that Re-ops can enable, having a flexible and fully programmable tool can really lead to interesting ideas and implementation.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://www.belkin.com/au/Products/home-automation/c/wemo-home-automation/'&gt;WeMo&lt;/a&gt; home automation.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://mqtt.org/'&gt;MQTT&lt;/a&gt; protocol,&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;AWS &lt;a href='https://aws.amazon.com/ec2/spot/'&gt;Spot&lt;/a&gt; instances&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
+</description>
+<pubDate>
+Tue, 20 Feb 2018 00:00:00 +1100
+</pubDate>
+</item>
 <item>
 <guid>
 http://narkisr.com/posts/04-02-2018-types-mismatch/
@@ -66,11 +152,11 @@ public class PersonModelConvertor&amp;lt;PersonTo&amp;gt; {
 ; once parsed the person is a simple hashmap datastructure that we manipulate
 &amp;#40;defn process &amp;#91;person&amp;#93;
    &amp;#40;assoc person :is-registered false&amp;#41;&amp;#41;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Oh wait, that is too simple your cheating!, what about type checking your code? making sure that its correct and all.&lt;/p&gt;&lt;p&gt;In the words of Rich Hickey:&lt;/p&gt;&lt;blockquote&gt;&lt;p&gt;And I like to ask this question: What's true of every bug found in the field? &lt;/p&gt;&lt;/blockquote&gt;&lt;blockquote&gt;&lt;p&gt;Audience reply: Someone wrote it? Audience reply: It got written. &lt;/p&gt;&lt;/blockquote&gt;&lt;blockquote&gt;&lt;p&gt;It got written. Yes. What's a more interesting fact about it? It passed the type checker. &lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;With all that in mind there are cases where checking structure the data between components make sense.&lt;/p&gt;&lt;p&gt;Enter clojure.spec:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;s/def ::name string?&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Oh wait, that is too simple your cheating!, what about type checking your code? making sure that its correct and all.&lt;/p&gt;&lt;p&gt;In the words of Rich Hickey:&lt;/p&gt;&lt;blockquote&gt;&lt;p&gt;And I like to ask this question: What's true of every bug found in the field? &lt;/p&gt;&lt;/blockquote&gt;&lt;blockquote&gt;&lt;p&gt;Audience reply: Someone wrote it? Audience reply: It got written. &lt;/p&gt;&lt;/blockquote&gt;&lt;blockquote&gt;&lt;p&gt;It got written. Yes. What's a more interesting fact about it? It passed the type checker. &lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;With all that in mind there are cases in which verifying structure the data between components makes sense, enter clojure.spec:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;s/def ::name string?&amp;#41;
 &amp;#40;s/def ::age integer?&amp;#41;
 
 &amp;#40;s/def ::person &amp;#40;s/keys :req &amp;#91;::name ::age&amp;#93;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This allows us to check the validity in run time and check that different parts of the system conform to the specifications of others.&lt;/p&gt;&lt;h3 id=&quot;we&amp;#95;have&amp;#95;magic&amp;#95;x&amp;#95;that&amp;#95;converts&amp;#95;our&amp;#95;types!&quot;&gt;We have magic X that converts our types!&lt;/h3&gt;&lt;p&gt;There are &quot;shorter&quot; ways of converting types, such as:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Code generation, we generate our types from a schema and don't write them, still you have code which isn't generate (the logic right?) and its bound to those multiple types increasing the maintenance cost, in addition you maintain a whole set of tools and schema so its not free.&lt;/li&gt;&lt;li&gt;Automated mapping libraries, similar to code generation you still have to maintain a huge set mapping between the types also the types themself don't go away you still have multiple types describing the same entity.&lt;/li&gt;&lt;li&gt;We work on the raw parsed data matching on the JSON:&lt;/li&gt;&lt;/ol&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;class CC&amp;#91;T&amp;#93; {
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This allows us to check the validity in run time and check that different parts of the system conform to the specifications of others.&lt;/p&gt;&lt;h3 id=&quot;we&amp;#95;have&amp;#95;magic&amp;#95;x&amp;#95;that&amp;#95;converts&amp;#95;our&amp;#95;types!&quot;&gt;We have magic X that converts our types!&lt;/h3&gt;&lt;p&gt;There are &quot;shorter&quot; ways of converting types, such as:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Code generation, we generate our types and convertors we don't write them manually, the business isn't generated and its bound to those multiple types increasing the maintenance cost, in addition you maintain a whole set of tools and schema so its not free.&lt;/li&gt;&lt;li&gt;Automated mapping libraries, similar to code generation you still have to maintain a huge set mapping between the types also the types themself don't go away you still have multiple types describing the same entity.&lt;/li&gt;&lt;li&gt;We work on the raw parsed data matching on the JSON:&lt;/li&gt;&lt;/ol&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;class CC&amp;#91;T&amp;#93; {
   def unapply&amp;#40;a:Option&amp;#91;Any&amp;#93;&amp;#41;:Option&amp;#91;T&amp;#93; = if &amp;#40;a.isEmpty&amp;#41; {
     None
   } else {
@@ -95,7 +181,7 @@ for {
 } yield {
   &amp;#40;name, active, completeness&amp;#41;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Imagine this logic for n JSON documents in your system, it gets ugly pretty quickly.&lt;/p&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;When using types and unstructured data be aware of the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in type conversion juggling not with the business logic itself.&lt;/p&gt;&lt;p&gt;Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='https://github.com/matthiasn/talk-transcripts/blob/master/Hickey_Rich/SimpleMadeEasy.md'&gt;Simple Made easy&lt;/a&gt;.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://dozer.sourceforge.net/'&gt;Dozer&lt;/a&gt; is an example for an &quot;automated&quot; bean to bean mapping framework.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; How to parse JSON in &lt;a href='https://stackoverflow.com/questions/4170949/how-to-parse-json-in-scala-using-standard-scala-classes'&gt;Scala&lt;/a&gt; using standard Scala classes?&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Imagine this logic for n JSON documents in your system, it gets ugly pretty quickly.&lt;/p&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;When using types in the context of unstructured data be aware to the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in juggling type conversion instead of focusing on the business logic itself.&lt;/p&gt;&lt;p&gt;Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='https://github.com/matthiasn/talk-transcripts/blob/master/Hickey_Rich/SimpleMadeEasy.md'&gt;Simple Made easy&lt;/a&gt;.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://dozer.sourceforge.net/'&gt;Dozer&lt;/a&gt; is an example for an &quot;automated&quot; bean to bean mapping framework.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; How to parse JSON in &lt;a href='https://stackoverflow.com/questions/4170949/how-to-parse-json-in-scala-using-standard-scala-classes'&gt;Scala&lt;/a&gt; using standard Scala classes?&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
 Sun, 04 Feb 2018 00:00:00 +1100
