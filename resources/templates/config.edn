@@ -19,7 +19,6 @@
  :clean-urls?          true
  :ignored-files        [#"\.#.*" #".*\.swp$"]
  :previews?            false
- :disqus-shortname "narkisr.com"
  :debug? false
  :rss-filters []
  }
