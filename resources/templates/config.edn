@@ -14,7 +14,7 @@
  :sass-dest        nil
  :resources        ["img" "css" "js" "404.html"]
  :keep-files       [".git"]
- :disqus?          true
+ :disqus?          false
  :hide-future-posts?   true
  :clean-urls?          true
  :ignored-files        [#"\.#.*" #".*\.swp$"]
