@@ -12,11 +12,120 @@ http://narkisr.com/
 The blog of Ronen Narkis
 </description>
 <lastBuildDate>
-Sat, 26 May 2018 20:58:46 +1000
+Tue, 28 Apr 2020 13:00:52 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://narkisr.com/posts/27-04-2020-clara-flow/
+</guid>
+<link>
+http://narkisr.com/posts/27-04-2020-clara-flow/
+</link>
+<title>
+Rules, not what you recall
+</title>
+<description>
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;Like most developers I used to think on rule engines as a interesting technology that never took off, a common misconception around them was that they would enable domain experts to encode rules into them without the need of having developers in this process (reducing cost/implementation time).&lt;/p&gt;&lt;p&gt;As expected this never worked in practice and as projects failed interest dwindled and they were left as an historical relic together with &lt;a href='https://en.wikipedia.org/wiki/Visual_programming_language'&gt;visual programming&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;In this post I will try to revive the interest in using a rule engine and cover how I use &lt;a href='https://github.com/cerner/clara-rules'&gt;Clara rules&lt;/a&gt; in an interesting domain - operation flow automation.&lt;/p&gt;&lt;h3 id=&quot;so&amp;#95;what&amp;#95;are&amp;#95;rule&amp;#95;engines?&quot;&gt;So what are rule engines?&lt;/h3&gt;&lt;p&gt;A Rule engine include 3 main types of components:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Facts, information that our system get from the world.&lt;/li&gt;&lt;li&gt;Rules, how those facts effect our world&lt;/li&gt;&lt;li&gt;Queries that we may run in order to find what kind of rules were activate and why.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The underlying implementation uses a directed acyclic graph and an algorithm named &lt;a href='https://en.wikipedia.org/wiki/Rete_algorithm'&gt;RETE&lt;/a&gt; for efficient computation on top of a large sets of rules and facts.&lt;/p&gt;&lt;p&gt;&lt;small&gt; * If the above rings a bell of Logic programming and expert system you are not mistaken with the later usually being implemented in Prolog.&lt;/small&gt;&lt;/p&gt;&lt;p&gt;A basic rule in Clara is composed from a left hand side (a match on facts) and the right hand side (the effect of a match) separated by '=&gt;', in this case we match on facts that have a :state value of ::start :&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;ns foo&amp;#41;
+
+&amp;#40;defrule example
+  &amp;quot;An example rule&amp;quot;
+  ; What to match on
+  &amp;#91;?e &amp;lt;- ::start&amp;#93;
+  =&amp;gt;
+  ; The effect of the match
+  &amp;#40;println &amp;quot;foo&amp;quot;&amp;#41;
+  &amp;#40;insert! {:state ::done :failure false}&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Lets note a couple of interesting points here:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;The RHS doesn't have to be side effect free! (see that lovely println)&lt;/li&gt;&lt;li&gt;The RHS can insert new facts into the system.&lt;/li&gt;&lt;li&gt;We can capture the incoming matched fact in variables (?e), this allows us to pass in arbitrary information to the rules.&lt;/li&gt;&lt;li&gt;Our facts are plain old Clojure maps (we can create them from any arbitrary input).&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Our rule engine state (RETE remember?) is an immutable data structure (&lt;a href='https://en.wikipedia.org/wiki/Turtles_all_the_way_down'&gt;turtles&lt;/a&gt; all the way down) that we store in an atom:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn initialize &amp;#91;&amp;#93;
+  &amp;#40;atom &amp;#40;mk-session 'foo&amp;#41;&amp;#41;&amp;#41;
+
+&amp;#40;def session &amp;#40;initialize&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If we want to insert new facts into it (while keeping our old view of the world) we can just reset it:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn update- &amp;#91;facts&amp;#93;
+  &amp;#40;let &amp;#91;new-facts &amp;#40;reduce &amp;#40;fn &amp;#91;s fact&amp;#93; &amp;#40;insert s fact&amp;#41;&amp;#41; @session facts&amp;#41;&amp;#93;
+    &amp;#40;reset! session &amp;#40;fire-rules new-facts&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+
+&amp;#40;commment
+  ; update our view of the world
+  &amp;#40;update- {:state :foo/start :yet :another :key 1}&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can also query our session and ask what happened:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defquery get-failures
+  &amp;quot;Find all failures&amp;quot;
+  &amp;#91;&amp;#93;
+  &amp;#91;?f &amp;lt;- :re-flow.core/state &amp;#40;= true &amp;#40;this :failure&amp;#41;&amp;#41;&amp;#93;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;existing&amp;#95;approaches&quot;&gt;Existing approaches&lt;/h2&gt;&lt;p&gt;Lets take a step back and cover what a conditional is composed out of:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;A predicate (the when of an IF statement).&lt;/li&gt;&lt;li&gt;The result of a match on a predict (the logic that happens after a match).&lt;/li&gt;&lt;li&gt;The computation flow (the cause and effect graph).&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;We use conditional logic when we try to describe the flow of steps in a distributed process like  for example a remote backup restore test:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Create a VM with a volume to restore our data to&lt;/li&gt;&lt;li&gt;Provision the VM with the required tooling and prepare our volume&lt;/li&gt;&lt;li&gt;Check that we are ready to start the restore process (our VM is ready and our volume has the correct size)&lt;/li&gt;&lt;li&gt;Restore the data and verify that it was successful&lt;/li&gt;&lt;li&gt;Notify on success or failure&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;There are a number of ways to model this kind of flow, the simplest one is to use conditionals:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn restore-backup &amp;#91;backup&amp;#93;
+  &amp;#40;let &amp;#91;{:keys &amp;#91;created?&amp;#93; :as creation-result} &amp;#40;create-vm&amp;#41;&amp;#93;
+     &amp;#40;if-not vm-create?
+         &amp;#40;throw &amp;#40;ex-info &amp;quot;failed to create the VM&amp;quot; creation-result&amp;#41;&amp;#41;
+         &amp;#40;let &amp;#91;{:keys &amp;#91;provisioned?&amp;#93; :as provisioning-result} &amp;#40;provision&amp;#41;&amp;#93;
+            ; rest of the flow
+            &amp;#41;&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are a number of issue with this approch:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;As &lt;a href='https://en.wikipedia.org/wiki/Cyclomatic_complexity'&gt;Cyclomatic complexity&lt;/a&gt; explodes its really hard to reason about the code.&lt;/li&gt;&lt;li&gt;Composition is challenging since trying to compose one chain of conditional logic with another is fragile.&lt;/li&gt;&lt;li&gt;The only way to understand failure points in the code is by painstaking debugging and printing.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Another approach is to use finite state machines (FSM for short), the following FSM has a :start state and a number of transitions defined:&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defsm restore
+  &amp;#91;&amp;#91;:start
+    ::create -&amp;gt; &amp;#40;create-vm&amp;#41;&amp;#93;
+   &amp;#91;:created
+    true -&amp;gt;  &amp;#40;provision&amp;#41;
+    false -&amp;gt; &amp;#40;report-error&amp;#41;&amp;#93;
+   &amp;#91;:provisioned
+    true -&amp;gt;  &amp;#40;restore&amp;#41;
+    false -&amp;gt; &amp;#40;report-error&amp;#41;&amp;#93;
+  &amp;#91;:restored
+    true -&amp;gt;  &amp;#40;printrln &amp;quot;success&amp;quot;&amp;#41;
+    false -&amp;gt; &amp;#40;report-error&amp;#41;&amp;#93;
+   &amp;#93;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;On a first glance this looks promising as it frees us from the conditional nesting but there are still a number of issues:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Location information is still complected making change in a large set of FMS's is still tricky.&lt;/li&gt;&lt;li&gt;They are not easy to compose (think about combining the restore FSM with a new notification FSM)&lt;/li&gt;&lt;li&gt;They lack introspection (understand why we reached a certain state within them).&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;There are other approaches that solve the same problem but I would like to claim (while not providing a rigorous mathematical proof) that they are &lt;a href=&quot;https://en.wikipedia.org/wiki/Reduction_(complexity)&quot;&gt;reducible &lt;/a&gt; to the two approaches mentioned above.&lt;/p&gt;&lt;h3 id=&quot;the&amp;#95;case&amp;#95;fore&amp;#95;clara&amp;#95;rules&quot;&gt;The case fore Clara rules&lt;/h3&gt;&lt;p&gt;Coming back to the same problem space (restoration flow) our code now is composed out of a two sets of rules, the first one is the creation and provisioning logic:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;ns re-flow.setup
+  ;...
+  &amp;#41;
+
+&amp;#40;defrule creating
+  &amp;quot;Create VM&amp;quot;
+  &amp;#91;?e &amp;lt;- ::creating &amp;#91;&amp;#93;&amp;#93;
+  =&amp;gt;
+  &amp;#40;insert! &amp;#40;assoc ?e :state ::created :failure &amp;#40;create-vm&amp;#41;&amp;#41;&amp;#41;
+
+
+&amp;#40;defrule provisioning
+  &amp;quot;Provisioning&amp;quot;
+  &amp;#91;?e &amp;lt;- ::created &amp;#40;= ?failure false&amp;#41;&amp;#93;
+  =&amp;gt;
+   ; ....
+   &amp;#40;info &amp;quot;provisioning&amp;quot;&amp;#41;
+   &amp;#40;insert! &amp;#40;assoc ?e :state ::provisioned :failure &amp;#40;provision&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that we didn't specify the order of execution we only provided the predicate and the effect of a match.&lt;/p&gt;&lt;p&gt;Our restoration logic is completely decoupled from the creation logic (it resides in a different namespace), it does not care on how the instance is coming to life it only concern itself with what it should do once its up and running:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;ns re-flow.restore
+  ;...
+  &amp;#41;
+
+&amp;#40;defrule check
+  &amp;quot;Check that the ?e fact is matching the ::restore spec&amp;quot;
+  &amp;#91;?e &amp;lt;- ::start&amp;#93;
+  =&amp;gt;
+  &amp;#40;insert! &amp;#40;assoc ?e :state ::spec :failure &amp;#40;not &amp;#40;s/valid? ::restore ?e&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+
+&amp;#40;defrule create
+  &amp;quot;Triggering the creation of the instance&amp;quot;
+  &amp;#91;?e &amp;lt;- ::spec &amp;#91;{:keys &amp;#91;failure&amp;#93;}&amp;#93; &amp;#40;= failure false&amp;#41;&amp;#93;
+  =&amp;gt;
+  &amp;#40;info &amp;quot;Starting to run setup instance&amp;quot;&amp;#41;
+  &amp;#40;insert!  &amp;#40;assoc ?e :state :re-flow.setup/creating :spec instance&amp;#41;&amp;#41;&amp;#41;
+
+&amp;#40;defrule restore
+  &amp;quot;Restoring information&amp;quot;
+  &amp;#91;?e &amp;lt;- ::provisioned &amp;#91;{:keys &amp;#91;failure&amp;#93;}&amp;#93; &amp;#40;= failure false&amp;#41;&amp;#93;
+  =&amp;gt;
+  &amp;#40;insert! &amp;#40;assoc ?e :state ::restored :failure &amp;#40;restore&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The check rule matches on the ::start state fact where ?e is captured and verified against a spec, the second rule trigger the creation flow if the ::spec fact failure value is false.&lt;/p&gt;&lt;p&gt;In order to launch this flow we insert a fact into our session:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;; We provide the backup information as a map within the fact
+&amp;#40;update- {:state :re-flow.restore/start :backup {:source &amp;quot;s3://&amp;quot; ...}&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We may use the query we already defined to find what rule fail:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn run-query &amp;#91;q&amp;#93;
+  &amp;#40;query @session q&amp;#41;&amp;#41;
+
+; The query result is a native Clojure datastucture
+&amp;#40;run-query get-failures&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This approach has a number of clear advantages:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Logic is decoupled its easy to make changes to one rule without breaking other rules.&lt;/li&gt;&lt;li&gt;Composition is easy, one set of rules can trigger other rules from other namespaces.&lt;/li&gt;&lt;li&gt;Tracking failure and other information is easy (just write queries)&lt;/li&gt;&lt;li&gt;We get the execution engine for free (computation graph).&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;A number of other key points that we should cover:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;The engine does not deal with concurrency however its immutable which allows us to set the new engine state using native Clojure Refs.&lt;/li&gt;&lt;li&gt;The Rules are not persisted to disk by default if we choose to do so we can serialize its state and persist it.&lt;/li&gt;&lt;li&gt;The engine state is not a distributed data structure, if we have multiple JVM's we can shard our facts based on keys (think Kafka consumers).&lt;/li&gt;&lt;/ul&gt;&lt;h3 id=&quot;summary&quot;&gt;Summary&lt;/h3&gt;&lt;p&gt;Iv found Clara rules to be a really powerful tool for automation if you are curious check &lt;a href='https://github.com/re-ops/re-core/tree/master/src/re_flow'&gt;Re-core&lt;/a&gt; code, ill conclude this post with my own variation on Greenspuns tenth &lt;a href='https://en.wikipedia.org/wiki/Greenspun%27s_tenth_rule'&gt;rule&lt;/a&gt;:&lt;/p&gt;&lt;p&gt;&quot;Every complex yml/json that describes a complex pipeline is interpreted by an ad hoc informally-specified, bug-ridden, slow implementation of a Forward-chaining rules engine&quot;&lt;/p&gt;&lt;p&gt;  Pipelines are computation graphs&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;Martin fowler mentioning the &lt;a href='https://martinfowler.com/bliki/RulesEngine.html'&gt;misconception&lt;/a&gt;.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;The connection between Expert &lt;a href='https://en.wikipedia.org/wiki/Expert_system'&gt;systems&lt;/a&gt; and rule engines.&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
+</description>
+<pubDate>
+Mon, 27 Apr 2020 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 http://narkisr.com/posts/20-02-2018-wacky/
@@ -100,7 +209,7 @@ Speculative execution
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;In this post we explored some of the more speculative (yet possible) flows that Re-ops can enable, having a flexible and fully programmable tool can really lead to interesting ideas and implementation.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://www.belkin.com/au/Products/home-automation/c/wemo-home-automation/'&gt;WeMo&lt;/a&gt; home automation.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://mqtt.org/'&gt;MQTT&lt;/a&gt; protocol,&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;AWS &lt;a href='https://aws.amazon.com/ec2/spot/'&gt;Spot&lt;/a&gt; instances&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Tue, 20 Feb 2018 00:00:00 +1100
+Tue, 20 Feb 2018 00:00:00 +0100
 </pubDate>
 </item>
 <item>
@@ -184,7 +293,7 @@ for {
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Imagine this logic for n JSON documents in your system, it gets ugly pretty quickly.&lt;/p&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;When using types in the context of unstructured data be aware to the trade-offs, if your system deals with a huge variety of JSON/CSV or random HTML you will be spending a lot time in juggling type conversion instead of focusing on the business logic itself.&lt;/p&gt;&lt;p&gt;Its hard to quantify but ~30% is not an exaggerated number from my experience in large Java projects, other languages with better type systems might get away with less but it still a considerable overhead.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='https://github.com/matthiasn/talk-transcripts/blob/master/Hickey_Rich/SimpleMadeEasy.md'&gt;Simple Made easy&lt;/a&gt;.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt;&lt;a href='http://dozer.sourceforge.net/'&gt;Dozer&lt;/a&gt; is an example for an &quot;automated&quot; bean to bean mapping framework.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; How to parse JSON in &lt;a href='https://stackoverflow.com/questions/4170949/how-to-parse-json-in-scala-using-standard-scala-classes'&gt;Scala&lt;/a&gt; using standard Scala classes?&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Sun, 04 Feb 2018 00:00:00 +1100
+Sun, 04 Feb 2018 00:00:00 +0100
 </pubDate>
 </item>
 <item>
@@ -201,7 +310,7 @@ The balancing game
 &lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;&lt;p&gt;Dependencies exists in multiple shapes and forms in our software, some are easy to detect while other are hidden and insidious.&lt;/p&gt;&lt;p&gt;Common to all dependencies is that they have a great effect on the systems we create, in this short post ill try to make you aware on why its crucial to manage them properly and the damage that poor management can cause.&lt;/p&gt;&lt;h3 id=&quot;where&amp;#95;can&amp;#95;we&amp;#95;find&amp;#95;them?&quot;&gt;Where can we find them?&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;In external libraries our code depends upon.&lt;/li&gt;&lt;li&gt;Services that our systems use (Databases, external API's etc..).&lt;/li&gt;&lt;li&gt;Operating system, packages its running, its kernel version etc..&lt;/li&gt;&lt;li&gt;The hardware we deploy on, the network setup.&lt;/li&gt;&lt;li&gt;People we depends upon like developers, clients, investors and of course users.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;There are many other places that dependencies creep from just stop and think about it for a second.&lt;/p&gt;&lt;h3 id=&quot;good&amp;#95;or&amp;#95;bad?&quot;&gt;Good or bad?&lt;/h3&gt;&lt;p&gt;Like most things in life it depends (pun intended), any dependency can turn into a liability in the future.&lt;/p&gt;&lt;p&gt;It can make your code harder to change, OS upgrades harder or cause security issues, that said using the right dependency can reduce the amount of work you need to do while increasing reuse and security.&lt;/p&gt;&lt;p&gt;Managing dependencies is a balancing game and a delicate one at that, it takes experience and trial and error to learn which dependencies are good and which are better to avoid.&lt;/p&gt;&lt;h3 id=&quot;do's&amp;#95;and&amp;#95;don'ts&quot;&gt;Do's and Don'ts&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;Map the dependencies you have and track them under an &lt;a href='https://git-scm.com/'&gt;SCM&lt;/a&gt;.&lt;/li&gt;&lt;li&gt;Use dependency managers to manage them (create them if none exists).&lt;/li&gt;&lt;li&gt;Trim dependencies once in a while, they tend to accumulate and grow like a wild plant.&lt;/li&gt;&lt;li&gt;Keep dependencies up to date, postponing updates for too long can cause your system to stagnate (there are tools that track out of date dependencies).&lt;/li&gt;&lt;li&gt;Minimize dependencies,  sometimes its better to copy and paste a single function (assuming its self isolated) than to include a entire library.&lt;/li&gt;&lt;li&gt;Don't over minimize and re-invent stuff if it exists already &lt;a href='https://en.wikipedia.org/wiki/Not_invented_here'&gt;NIH&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;Dependencies can really change the faith of a projects (and companies) once a dependency has set in it may be really hard to detach, be cautious and aware to both the challenge and reward that your dependencies present.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt;&lt;a href='https://github.com/xsc/lein-ancient'&gt;Lein Ancient&lt;/a&gt; and &lt;a href='https://github.com/ben-manes/gradle-versions-plugin'&gt;Gradle Versions&lt;/a&gt; are tools to track and report old dependencies.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; &lt;a href='https://gradle.org/'&gt;Gradle&lt;/a&gt;, &lt;a href='https://leiningen.org/'&gt;Lein&lt;/a&gt;, &lt;a href='http://bundler.io/'&gt;Bundler&lt;/a&gt;, &lt;a href='https://github.com/pypa/pipfile'&gt;Pipefile&lt;/a&gt; are good examples of code dependency management tools.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; &lt;a href='https://wiki.debian.org/Apt'&gt;Apt&lt;/a&gt;, &lt;a href='https://fedoraproject.org/wiki/DNF?rd=Dnf'&gt;DNF&lt;/a&gt; and &lt;a href='https://chocolatey.org/'&gt;Chocolatey&lt;/a&gt; manage packages on a variety of OSes.&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; Configuration management tools such as &lt;a href='https://puppet.com/'&gt;Puppet&lt;/a&gt; and &lt;a href='https://www.chef.io/solutions/infrastructure-automation/'&gt;Chef&lt;/a&gt; manage dependencies of deployed components.&lt;small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Wed, 17 Jan 2018 00:00:00 +1100
+Wed, 17 Jan 2018 00:00:00 +0100
 </pubDate>
 </item>
 <item>
@@ -338,7 +447,7 @@ $ ssh pi@&amp;lt;ip&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;The processes of setting the root encrypted image is quite contrived and manual at the moment, the guides out there aren't complete or up to date, this guide is a starting point for a more automated approach.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; The original tutorial for &lt;a href='https://www.offensive-security.com/kali-linux/raspberry-pi-luks-disk-encryption/]'&gt;Kali&lt;/a&gt; Linux which gives a good outline (doesn't work as is on Raspbian tough).&lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://hblok.net/blog/posts/2014/02/06/chroot-to-arm/'&gt;post&lt;/a&gt; which mainly helped me to solve 'qemu: uncaught target signal 4' error. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; A &lt;a href='https://www.raspberrypi.org/forums/viewtopic.php?f=66&amp;t=130268'&gt;post&lt;/a&gt; that helped solved the 'debian /sbin/cryptsetup: not found raspbian'  errors &lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Sat, 16 Apr 2016 00:00:00 +1000
+Sat, 16 Apr 2016 00:00:00 +0200
 </pubDate>
 </item>
 <item>
@@ -368,7 +477,7 @@ $ vagrant up
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once done you can either head on to &lt;a href='https://localhost'&gt;localhost&lt;/a&gt; (from within the VM) or from the host use the forwarded ports &lt;a href='https://localhost:8444'&gt;snorby&lt;/a&gt;.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;small&gt; Sadly automating the setup wizard using Puppet didn't workout, you can pass an answer file but the text based wizard does not work proprerly while being ran from the Puppet exec call. &lt;/small&gt;&lt;/li&gt;&lt;li&gt;&lt;small&gt; openssh server didn't work well so the vagrant box is using dropbear instead.&lt;/small&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Sat, 27 Dec 2014 00:00:00 +1100
+Sat, 27 Dec 2014 00:00:00 +0100
 </pubDate>
 </item>
 <item>
@@ -524,7 +633,7 @@ celestial.core.get&amp;#95;system&amp;#40;id,&amp;#40;&amp;#40;b&amp;#41;-&amp;g
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;&lt;p&gt;Iv found cljs and nodejs to be a very powerfull (yet a bit young) combo to work with, it offers yet another very rich platform to run Clojure code on top of. I hope you will find it useful too.&lt;/p&gt;&lt;h4 id=&quot;footnotes:&quot;&gt;Footnotes:&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/celestial-node'&gt;celestial-node&lt;/a&gt; (most of the code preseted)&lt;/li&gt;&lt;li&gt;&lt;a href='https://github.com/narkisr/hubot-celestial'&gt;hubot-celestial&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 </description>
 <pubDate>
-Sat, 18 May 2013 00:00:00 +1000
+Sat, 18 May 2013 00:00:00 +0200
 </pubDate>
 </item>
 <item>
@@ -561,7 +670,7 @@ $ adb reboot
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now at the last boot follow the script maunal steps: &lt;blockquote&gt;  Shut down the Transformer manually and boot into recovery. To boot into recovery hold Power + Volume Down buttons and next confirm with Volume Up buked. Rogue XM recovery will boot.&lt;br /&gt; Select the option to wipe cache, wipe Dalvik cache, then choose Install zip file from internal storage and choose the Superuser-3.0.7-efghi-signed.zip. &lt;/blockquote&gt;&lt;/p&gt;&lt;p&gt;Congrates you have root access now.&lt;/p&gt;&lt;p&gt;Now lets head on to installing CWM, from your device download  &lt;a href='http://goo.im/devs/RaymanFX/downloads/ClockWordMod-Recovery/TF101/cwm-6.0.2.1-notouch-hybrid.zip'&gt;cwm-6.0.2.1-notouch-hybrid.zip&lt;/a&gt;  as referenced from this forum &lt;a href='' title=http://forum.xda-developers.com/showthread.php?t=1855686&gt;entry&lt;/a&gt;  , reboot into recovery mode (same as before) and apply the zip, reboot again and use the volume-up and power button to enter into CWM recovery.&lt;/p&gt;&lt;p&gt;Once you see the CWM recovery loading and working we can proceed with installing the unofficial cyanogenmod as reviewed  &lt;a href='http://forum.xda-developers.com/showthread.php?t=2010903'&gt;here&lt;/a&gt; , from within your device browser download  &lt;a href='http://goo.im/getmd5/devs/RaymanFX/downloads/CyanogenMod-10.1/TF101/v0.8.0.zip'&gt;v0.8.0.zip&lt;/a&gt;  and Google apps  &lt;a href='http://goo.im/devs/RaymanFX/downloads/Gapps/4.2_gapps-jb-20121119.zip'&gt;4.2_gapps-jb-20121119.zip&lt;/a&gt; , now boot into CWM and apply the v0.8.0.zip from internal sdcard, also clear the device and dalvik caches reboot into the new Android OS.&lt;/p&gt;&lt;p&gt;Note that it will be missing Google apps but we still need to boot into the new OS before applying the second Google apps zip, now its safe to boot into CWM and apply the 4.2_gapps-jb-20121119.zip, one last reboot and you should be greated with Google acount setup dialog.&lt;/p&gt;
 </description>
 <pubDate>
-Sat, 13 Apr 2013 00:00:00 +1000
+Sat, 13 Apr 2013 00:00:00 +0200
 </pubDate>
 </item>
 <item>
@@ -625,7 +734,7 @@ nil nil nil  ; after a delay
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I found this method to offer a balance between the spread of work and predictable load on the target.&lt;/p&gt;
 </description>
 <pubDate>
-Tue, 24 Jul 2012 00:00:00 +1000
+Tue, 24 Jul 2012 00:00:00 +0200
 </pubDate>
 </item>
 <item>
@@ -691,7 +800,7 @@ wlan0     Link encap:Ethernet  HWaddr 00:1f:1f:f2:ff:f8
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Enjoy your pie!&lt;br /&gt;&lt;/p&gt;
 </description>
 <pubDate>
-Fri, 20 Jul 2012 00:00:00 +1000
+Fri, 20 Jul 2012 00:00:00 +0200
 </pubDate>
 </item>
 </channel>
